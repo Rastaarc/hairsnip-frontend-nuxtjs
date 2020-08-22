@@ -17,8 +17,7 @@
     "@nuxtjs/axios": "^5.11.0",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
     "nuxt": "^2.13.0",
-    "nuxt-socket-io": "^1.1.8",
-	"@nuxtjs/auth": "^1"
+    "nuxt-socket-io": "^1.1.8"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^3.0.0",
