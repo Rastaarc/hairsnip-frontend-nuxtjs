@@ -112,12 +112,18 @@ export default {
     this.socket = this.$nuxtSocket({})
   },
   methods: {
+    clearFormData() {
+      this.username = null
+      this.password = null
+    },
     closeDialog() {
       this.$store.commit('dialog/updateLoginDialog', {
         dState: false,
       })
+      // this.clearFormData()
     },
     openSignupDialog() {
+      this.clearFormData()
       this.$store.commit('dialog/updateLoginDialog', {
         dState: false,
       })
@@ -137,8 +143,7 @@ export default {
             pass: this.password,
           },
         })
-        this.username = ''
-        this.password = ''
+        // this.clearFormData()
         this.loading = false
         this.$store.dispatch('snackalert/showSnackbar', {
           msg: data.msg,

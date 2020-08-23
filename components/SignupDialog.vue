@@ -11,120 +11,204 @@
             <v-divider></v-divider>
           </v-col>
         </v-row>
-        <v-form ref="form" @submit.prevent="submit">
-          <v-row>
-            <v-col cols="12" md="8" lg="6" class="mx-auto">
-              <v-select
-                v-model="signup.usertype"
-                :rules="rules.usertypeRules"
-                label="User Type"
-                :items="usertypes"
-                required
-              >
-              </v-select>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" md="8" lg="6" class="mx-auto">
-              <v-text-field
-                v-model="signup.fullName"
-                label="Full Name"
-                :rules="rules.fullNameRules"
-                counter="50"
-                prepend-inner-icon="mdi-account"
-                required
-                clearable
-              >
-              </v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" md="8" lg="6" class="mx-auto">
-              <v-text-field
-                v-model="signup.username"
-                :rules="rules.usernameRules"
-                label="Username"
-                counter="15"
-                prepend-inner-icon="mdi-account"
-                required
-                clearable
-              >
-              </v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" md="8" lg="6" class="mx-auto">
-              <v-text-field
-                v-model="signup.email"
-                label="Email"
-                :rules="rules.emailRules"
-                prepend-inner-icon="mdi-email"
-                type="email"
-                required
-                clearable
-              >
-              </v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" md="8" lg="6" class="mx-auto">
-              <v-text-field
-                v-model="signup.phone"
-                label="Phone Number"
-                :rules="rules.phoneRules"
-                counter="11"
-                prepend-inner-icon="mdi-phone"
-                type="number"
-                required
-                clearable
-              >
-              </v-text-field>
-            </v-col>
-          </v-row>
-          <v-row class="pb-0 mb-1">
-            <v-col cols="12" md="8" lg="6" class="mx-auto">
-              <v-text-field
-                v-model="signup.password"
-                label="Password"
-                counter="32"
-                :rules="rules.passwordRules"
-                prepend-inner-icon="mdi-key"
-                :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="showPass ? 'text' : 'password'"
-                required
-                @click:append="showPass = !showPass"
-              >
-              </v-text-field>
-            </v-col>
-          </v-row>
-          <v-row align="center" justify="center" class="mb-4 text-center">
-            <v-col cols="12">
-              <v-btn
-                :loading="loading"
-                outlined
-                rounded
-                color="primary"
-                type="submit"
-                :disabled="disabled"
-              >
-                Continue
-              </v-btn>
-            </v-col>
-          </v-row>
-          <v-row align="center" justify="center" class="mt-5 text-center">
-            <v-col cols="12">
-              Have an account?
-              <v-btn
-                class="pl-0"
-                small
-                text
-                color="primary"
-                @click="openLoginDialog"
-                >Login In!</v-btn
-              >
-            </v-col>
-          </v-row>
-        </v-form>
+        <v-row>
+          <v-col>
+            <v-tabs v-model="signupTab" grow>
+              <v-tabs-slider color="primary"></v-tabs-slider>
+              <v-tab href="#clientTab">CLIENT</v-tab>
+              <v-tab href="#snipperTab">SNIPPER</v-tab>
+            </v-tabs>
+            <v-tabs-items v-model="signupTab">
+              <v-tab-item value="clientTab">
+                <v-form ref="form" @submit.prevent="submit">
+                  <v-row>
+                    <v-col cols="12" md="8" lg="6" class="mx-auto">
+                      <v-text-field
+                        v-model="signup.username"
+                        :rules="rules.usernameRules"
+                        label="Username"
+                        counter="15"
+                        prepend-inner-icon="mdi-account"
+                        required
+                        clearable
+                      >
+                      </v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="12" md="8" lg="6" class="mx-auto">
+                      <v-text-field
+                        v-model="signup.email"
+                        label="Email"
+                        :rules="rules.emailRules"
+                        prepend-inner-icon="mdi-email"
+                        type="email"
+                        required
+                        clearable
+                      >
+                      </v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="12" md="8" lg="6" class="mx-auto">
+                      <v-text-field
+                        v-model="signup.phone"
+                        label="Phone Number"
+                        :rules="rules.phoneRules"
+                        counter="11"
+                        prepend-inner-icon="mdi-phone"
+                        type="number"
+                        required
+                        clearable
+                      >
+                      </v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row class="pb-0 mb-1">
+                    <v-col cols="12" md="8" lg="6" class="mx-auto">
+                      <v-text-field
+                        v-model="signup.password"
+                        label="Password"
+                        counter="32"
+                        :rules="rules.passwordRules"
+                        prepend-inner-icon="mdi-key"
+                        :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="showPass ? 'text' : 'password'"
+                        required
+                        @click:append="showPass = !showPass"
+                      >
+                      </v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row
+                    align="center"
+                    justify="center"
+                    class="mb-4 text-center"
+                  >
+                    <v-col cols="12">
+                      <v-btn
+                        :loading="loading"
+                        outlined
+                        rounded
+                        color="primary"
+                        type="submit"
+                      >
+                        Continue
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-form>
+              </v-tab-item>
+              <v-tab-item value="snipperTab">
+                <v-form ref="form" @submit.prevent="submit">
+                  <v-row>
+                    <v-col cols="12" md="8" lg="6" class="mx-auto">
+                      <v-text-field
+                        v-model="signup.fullName"
+                        label="Full Name"
+                        :rules="rules.fullNameRules"
+                        counter="50"
+                        prepend-inner-icon="mdi-account"
+                        required
+                        clearable
+                      >
+                      </v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="12" md="8" lg="6" class="mx-auto">
+                      <v-text-field
+                        v-model="signup.username"
+                        :rules="rules.usernameRules"
+                        label="Username"
+                        counter="15"
+                        prepend-inner-icon="mdi-account"
+                        required
+                        clearable
+                      >
+                      </v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="12" md="8" lg="6" class="mx-auto">
+                      <v-text-field
+                        v-model="signup.email"
+                        label="Email"
+                        :rules="rules.emailRules"
+                        prepend-inner-icon="mdi-email"
+                        type="email"
+                        required
+                        clearable
+                      >
+                      </v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="12" md="8" lg="6" class="mx-auto">
+                      <v-text-field
+                        v-model="signup.phone"
+                        label="Phone Number"
+                        :rules="rules.phoneRules"
+                        counter="11"
+                        prepend-inner-icon="mdi-phone"
+                        type="number"
+                        required
+                        clearable
+                      >
+                      </v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row class="pb-0 mb-1">
+                    <v-col cols="12" md="8" lg="6" class="mx-auto">
+                      <v-text-field
+                        v-model="signup.password"
+                        label="Password"
+                        counter="32"
+                        :rules="rules.passwordRules"
+                        prepend-inner-icon="mdi-key"
+                        :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="showPass ? 'text' : 'password'"
+                        required
+                        @click:append="showPass = !showPass"
+                      >
+                      </v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row
+                    align="center"
+                    justify="center"
+                    class="mb-4 text-center"
+                  >
+                    <v-col cols="12">
+                      <v-btn
+                        :loading="loading"
+                        outlined
+                        rounded
+                        color="primary"
+                        type="submit"
+                      >
+                        Continue
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-form>
+              </v-tab-item>
+            </v-tabs-items>
+          </v-col>
+        </v-row>
+        <v-row align="center" justify="center" class="mt-5 text-center">
+          <v-col cols="12">
+            Have an account?
+            <v-btn
+              class="pl-0"
+              small
+              text
+              color="primary"
+              @click="openLoginDialog"
+              >Login In!</v-btn
+            >
+          </v-col>
+        </v-row>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -158,7 +242,6 @@ export default {
         usertype: '',
       },
       rules: {
-        usertypeRules: [(v) => !!v || 'Please select one the user type'],
         fullNameRules: [
           (v) => !!v || 'Full name is required',
           (v) => v.length <= 50 || 'Maximum length is 50',
@@ -183,33 +266,43 @@ export default {
           (v) => v.length <= 32 || 'Maximum length is 32',
         ],
       },
-      usertypes: ['Client', 'Snipper'],
       valid: true,
       showPass: false,
       loading: false,
     }
   },
   computed: {
-    disabled() {
-      const data = Object.values(this.signup)
-      const valid = data.every((val) => val)
-      if (!valid) {
-        return true
-      } else {
-        return false
-      }
+    // ...mapState('dialog', ['signupTab']),
+    signupTab: {
+      get() {
+        return this.$store.getters['dialog/signupType']
+      },
+      set(val) {
+        this.$store.commit('dialog/updateSignupType', {
+          dType: val,
+        })
+      },
     },
     openDialog() {
       return this.$store.getters['dialog/signupDialogStatus']
     },
   },
   methods: {
+    clearFormData() {
+      for (const key in this.signup) {
+        if (Object.prototype.hasOwnProperty.call(this.signup, key)) {
+          this.signup[key] = null
+        }
+      }
+    },
     closeDialog() {
+      // this.clearFormData()
       this.$store.commit('dialog/updateSignupDialog', {
         dState: false,
       })
     },
     openLoginDialog() {
+      // this.clearFormData()
       this.$store.commit('dialog/updateSignupDialog', {
         dState: false,
       })
@@ -222,6 +315,11 @@ export default {
       if (!valid) return
       this.loading = true
       try {
+        if (this.signupTab === 'snipperTab') {
+          this.signup.usertype = 'Snipper'
+        } else {
+          this.signup.usertype = 'Client'
+        }
         const { data } = await this.$axios.post('auth/register/', {
           data: this.signup,
         })

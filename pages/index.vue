@@ -96,6 +96,15 @@
           With HairSnip, your hair is safe with our professional snippers. Join
           Us Today for a perfect livestyle, we are the best.
         </p>
+        <v-btn
+          class="mt-3 mb-3"
+          color="primary"
+          type="submit"
+          rounded
+          @click="openSnipperSignup"
+        >
+          Join Us
+        </v-btn>
       </v-col>
     </v-row>
     <v-row justify="center" align="center" class="mt-5">
@@ -149,6 +158,12 @@ export default {
     },
   },
   methods: {
+    openSnipperSignup() {
+      this.$store.commit('dialog/updateSignupDialog', {
+        dState: true,
+        signupTab: 'snipperTab',
+      })
+    },
     async showData() {
       // eslint-disable-next-line no-console
       console.log(this.location)
