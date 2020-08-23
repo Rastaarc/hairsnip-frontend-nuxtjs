@@ -73,7 +73,6 @@
             text
             color="primary"
             to="/request"
-            :small="xSmall"
             >Request</v-btn
           >
           <v-badge
@@ -84,7 +83,7 @@
             overlap
             :value="showNotificationBadge"
           >
-            <v-btn color="primary" icon :small="xSmall">
+            <v-btn color="primary" icon>
               <v-icon>mdi-bell</v-icon>
             </v-btn>
           </v-badge>
