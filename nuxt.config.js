@@ -10,7 +10,7 @@ export default {
    ** Nuxt target
    ** See https://nuxtjs.org/api/configuration-target
    */
-  target: 'static',
+  target: 'server',
   /*
    ** Headers of the page
    ** See https://nuxtjs.org/api/configuration-head
@@ -67,7 +67,7 @@ export default {
     sockets: [
       {
         name: 'main',
-        url: 'http://localhost:5000',
+        url: process.env.SOCKET_URL || 'http://localhost:5000',
       },
     ],
   },
@@ -76,7 +76,7 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    baseURL: 'http://localhost:5000/api/',
+    baseURL: process.env.BASE_URL || 'http://localhost:5000/api/',
   },
   /*
    ** Content module configuration
