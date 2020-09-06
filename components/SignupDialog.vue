@@ -291,18 +291,18 @@ export default {
     clearFormData() {
       for (const key in this.signup) {
         if (Object.prototype.hasOwnProperty.call(this.signup, key)) {
-          this.signup[key] = null
+          this.signup[key] = ''
         }
       }
     },
     closeDialog() {
-      // this.clearFormData()
+      this.clearFormData()
       this.$store.commit('dialog/updateSignupDialog', {
         dState: false,
       })
     },
     openLoginDialog() {
-      // this.clearFormData()
+      this.clearFormData()
       this.$store.commit('dialog/updateSignupDialog', {
         dState: false,
       })

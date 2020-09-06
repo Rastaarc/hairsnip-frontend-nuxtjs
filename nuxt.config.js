@@ -1,6 +1,10 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
+  publicRuntimeConfig: {},
+  privateRuntimeConfig: {
+    GOOGLE_API_KEY: process.env.GMAP_API_KEY || '',
+  },
   /*
    ** Nuxt rendering mode
    ** See https://nuxtjs.org/api/configuration-mode
