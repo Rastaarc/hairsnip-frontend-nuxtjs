@@ -152,7 +152,7 @@ export default {
         this.$store.commit('dialog/updateLoginDialog', {
           dState: false,
         })
-        this.socket.emit('login', { msg: 'UserLogin' })
+        this.socket.emit('login', { username: this.username })
         this.$router.push('/dashboard')
       } catch (e) {
         this.loading = false

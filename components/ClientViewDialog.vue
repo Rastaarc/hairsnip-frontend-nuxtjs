@@ -5,43 +5,45 @@
         <v-row align="center" justify="center" align-content="center">
           <v-col align-self="center" cols="12">
             <h3 class="text-center text-h5 primary--text">
-              Snippers in your Area
+              New Job Alert
             </h3>
           </v-col>
           <v-col align-self="center" cols="12" class="text-center">
             <v-avatar size="150">
-              <v-img :src="snipperData.image_url" />
+              <v-img :src="clientData.image_url" />
             </v-avatar>
           </v-col>
           <v-col align-self="center" cols="12" class="text-center">
             <div class="text-center">
-              <p class="primary--text text-h5">{{ snipperData.username }}</p>
+              <p class="primary--text text-h5">{{ clientData.username }}</p>
               <p class="text-caption-2 text-center" style="margin-top: -15px;">
                 <v-icon small>mdi-map-marker-radius</v-icon>
-                {{ snipperData.address }}
+                {{ clientData.address }}
               </p>
             </div>
           </v-col>
           <v-col align-self="center" cols="12" class="text-center">
+            <p>Snip: {{ snipData.title }}</p>
+            <p>Charges: {{ snipData.price }}</p>
+          </v-col>
+          <v-col align-self="center" cols="12" class="text-center">
             <v-btn
-              color="primary"
+              color="green"
               text
               rounded
               outlined
               small
-              :loading="waitingForSnipperRespond"
-              @click="sendRequestToSnipper"
-              >MAKE REQUEST</v-btn
-            ><br /><br />
+              @click="closeDialog"
+              >ACCCEPT</v-btn
+            >
             <v-btn
-              color="grey lighten-2"
+              color="red acent-3"
               text
               rounded
               outlined
               x-small
-              :loading="loadingNewSnipper"
               @click="closeDialog"
-              >SWITCH SNIPPER</v-btn
+              >REJECT</v-btn
             >
           </v-col>
         </v-row>
@@ -52,10 +54,9 @@
           text
           color="primary acent-3"
           target="_blank"
-          :to="`/profile/${snipperData.username.toLowerCase()}`"
+          :to="`/profile/${clientData.username.toLowerCase()}`"
           >View Profile</v-btn
         >
-        <v-btn text color="red acent-3" @click="closeDialog">Close</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -68,7 +69,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    snipperData: {
+    clientData: {
       type: Object,
       default: () => {},
     },
@@ -87,8 +88,7 @@ export default {
   },
   data() {
     return {
-      waitingForSnipperRespond: false,
-      loadingNewSnipper: false,
+      socket: null,
     }
   },
   computed: {},
@@ -97,15 +97,7 @@ export default {
   },
   methods: {
     closeDialog() {
-      this.$emit('closeSnipperViewDialog')
-    },
-    sendRequestToSnipper() {
-      this.waitingForSnipperRespond = true
-      this.socket.emit('new_job_alert', {
-        client: this.$auth.user,
-        snip: this.snipData,
-        to: this.snipperData.username,
-      })
+      this.$emit('closeClientViewDialog')
     },
   },
 }

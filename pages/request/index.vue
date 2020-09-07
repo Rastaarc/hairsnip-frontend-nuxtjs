@@ -59,6 +59,7 @@
       v-if="dataAvailable"
       :open-dialog="showSnipperDialog"
       :snipper-data="snipper"
+      :snip-data="snip"
       @closeSnipperViewDialog="closeDialog"
     />
   </div>
@@ -82,6 +83,7 @@ export default {
       },
       loadingData: false,
       snipper: null,
+      snip: null,
       dataAvailable: false,
       rules: {
         style: [(v) => !!v || 'Please enter the hair style'],
@@ -174,6 +176,7 @@ export default {
           this.showSnipperDialog = true
           this.dataAvailable = true
           this.snipper = data.snipper
+          this.snip = data.snip
         }
       } catch (error) {
         this.$store.dispatch('snackalert/showSnackbar', {

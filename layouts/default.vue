@@ -8,6 +8,13 @@
     </v-main>
     <LoginDialog />
     <SignupDialog />
+    <ClientViewDialog
+      v-if="newJobAlert"
+      :snip-data="snip"
+      :client-data="client"
+      :open-dialog="showNewJobAlert"
+      @closeClientViewDialog="removeNewJobAlert"
+    />
     <SnackAlert />
     <BottomNavBar v-if="showBottomNavbar" :main-color="mainColor" />
     <Footer />
@@ -21,6 +28,7 @@ import AppBar from '~/components/AppBar'
 import Footer from '~/components/Footer'
 import SignupDialog from '~/components/SignupDialog'
 import SnackAlert from '~/components/SnackAlert'
+import ClientViewDialog from '~/components/ClientViewDialog'
 
 export default {
   components: {
@@ -30,11 +38,18 @@ export default {
     Footer,
     SignupDialog,
     SnackAlert,
+    ClientViewDialog,
   },
   data() {
     return {
+      socket: null,
       mainColor: 'primary',
       mobile: this.$vuetify.breakpoint.width <= 700,
+      user: 'guest-user-io',
+      snip: null,
+      client: null,
+      newJobAlert: false,
+      showNewJobAlert: false,
     }
   },
   computed: {
@@ -59,7 +74,39 @@ export default {
       return this.$vuetify.breakpoint.width <= 400
     },
   },
-  methods: {},
+  mounted() {
+    this.socket = this.$nuxtSocket({})
+    if (this.$auth.loggedIn) {
+      this.user = this.$auth.user.username
+    }
+    this.socket.on('connect', (msg, cb) => {
+      // eslint-disable-next-line no-console
+      console.log(`I'm connected to SocketIO`)
+      this.socket.emit('user_connected', { user: this.user })
+    })
+    this.socket.on('disconnect', (msg, cb) => {
+      // eslint-disable-next-line no-console
+      console.log(`I'm disconnected from SocketIO`)
+      this.socket.emit('user_disconnected', { user: this.user })
+    })
+    this.socket.on('job_alert', (msg, cb) => {
+      if (this.$auth.user.type === 'Snipper') {
+        // eslint-disable-next-line no-console
+        console.log(`Job Alert ${msg}`)
+        this.snip = { title: 'Gallas', price: 500 }
+        this.client = msg.client
+        this.showNewJobAlert = true
+        this.newJobAlert = true
+      }
+    })
+  },
+  methods: {
+    removeNewJobAlert() {
+      this.newJobAlert = false
+      this.showNewJobAlert = false
+      this.socket.emit('new_job_alert_reject', { for: 'client' })
+    },
+  },
 }
 </script>
 
