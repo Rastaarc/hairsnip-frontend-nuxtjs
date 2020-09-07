@@ -157,6 +157,11 @@ export default {
       return !this.location
     },
   },
+  mounted() {
+    if (this.$auth.loggedIn) {
+      this.$router.push('/dashboard')
+    }
+  },
   methods: {
     openSnipperSignup() {
       this.$store.commit('dialog/updateSignupDialog', {
