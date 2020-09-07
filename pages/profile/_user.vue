@@ -215,9 +215,7 @@ export default {
     },
     userAccount() {
       if (!this.isOwner) {
-        if (
-          this.$route.params.user.toUpperCase() === this.$auth.user.username
-        ) {
+        if (this.$route.params.user === this.$auth.user.username) {
           return true
         } else {
           return false

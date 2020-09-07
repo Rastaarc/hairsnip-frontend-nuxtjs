@@ -42,7 +42,12 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-text-field v-model="edit.address" label="Address" outlined>
+                <v-text-field
+                  ref="address"
+                  v-model="edit.address"
+                  label="Address"
+                  outlined
+                >
                 </v-text-field>
               </v-col>
             </v-row>
@@ -172,6 +177,7 @@ export default {
   middleware: 'authenticate',
   data() {
     return {
+      google: null,
       user_data: this.$auth.user,
       showPass: false,
       showPass1: false,
@@ -214,6 +220,21 @@ export default {
     ex() {
       return this.edit.skills
     },
+  },
+  mounted() {
+    const options = {
+      types: ['cities'],
+      // eslint-disable-next-line no-undef
+      bounds: new google.maps.LatLngBounds(
+        // eslint-disable-next-line no-undef
+        new google.maps.LatLng(9.081999, 8.675277)
+      ),
+    }
+    // eslint-disable-next-line no-undef
+    this.google = new google.maps.places.Autocomplete(
+      this.$refs.address,
+      options
+    )
   },
   methods: {
     validateNewPass() {
@@ -263,6 +284,11 @@ export default {
   head() {
     return {
       title: 'Edit Profile',
+      script: [
+        {
+          src: `https://maps.googleapis.com/maps/api/js?key=${this.$config.GMAP_API_KEY}&libraries=places&v=weekly`,
+        },
+      ],
     }
   },
 }
