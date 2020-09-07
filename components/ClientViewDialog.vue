@@ -65,6 +65,10 @@
 <script>
 export default {
   props: {
+    socketClientId: {
+      type: String,
+      default: '',
+    },
     openDialog: {
       type: Boolean,
       default: false,
@@ -93,20 +97,26 @@ export default {
   },
   computed: {},
   mounted() {
-    this.socket = this.$nuxtSocket({})
+    this.socket = this.$nuxtSocket({
+      name: 'main',
+      persist: 'true',
+    })
+    // eslint-disable-next-line no-console
+    console.log(this.socketClientId)
   },
   methods: {
     acceptRequest() {
       this.socket.emit('new_job_alert_accepted', {
-        to: this.clientData.id,
+        to: this.clientData,
         from: this.$auth.user,
         snip: this.snipData,
+        sid: this.socketClientId,
       })
       this.closeDialog()
     },
     rejectRequest() {
       this.socket.emit('new_job_alert_rejected', {
-        to: this.clientData.id,
+        to: this.clientData,
         from: this.$auth.user,
         snip: this.snipData,
       })

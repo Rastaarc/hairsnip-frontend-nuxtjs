@@ -85,7 +85,7 @@ export default {
         {
           icon: 'mdi-shopping',
           title: 'My Orders',
-          to: 'dashboard/client/orders',
+          to: '/dashboard/client/orders',
           for: 'client',
         },
         {

@@ -8,14 +8,16 @@
               <p class="text-h5 text-center">Choose Your Hair Style</p>
               <v-row>
                 <v-col cols="12">
-                  <v-text-field
+                  <v-select
                     v-model="clientData.clientHairStyle"
-                    placeholder="Try 'Low Cut'"
+                    placeholder="Pick an hairstyle"
                     :rules="rules.style"
+                    :items="snipsList"
+                    auto-complete
                     outlined
                     required
                   >
-                  </v-text-field>
+                  </v-select>
                 </v-col>
               </v-row>
               <p class="text-h5 text-center">Where Are You?</p>
@@ -60,6 +62,7 @@
       :open-dialog="showSnipperDialog"
       :snipper-data="snipper"
       :snip-data="snip"
+      :dialog-options="snipperViewDialogOptions"
       @closeSnipperViewDialog="closeDialog"
     />
   </div>
@@ -72,13 +75,49 @@ export default {
     SnipperViewDialog,
   },
   middleware: 'auth-client',
+  asyncData({
+    isDev,
+    route,
+    store,
+    env,
+    params,
+    query,
+    req,
+    res,
+    redirect,
+    error,
+    $axios,
+  }) {
+    return $axios
+      .get('user/load/snips_name/')
+      .then((res) => {
+        const snipsData = res.data.data
+        return { snipsList: snipsData }
+      })
+      .catch((e) => {
+        // eslint-disable-next-line no-console
+        console.log(e)
+        store.dispatch('snackalert/showSnackbar', {
+          msg: 'Error occurred while retrieving snips list',
+          color: 'red',
+        })
+      })
+  },
   data() {
     return {
+      socket: null,
       showSnipperDialog: false,
       autocomplete: null,
+      snipperViewDialogOptions: {
+        enableCloseBtn: true,
+        enableRequestBtn: true,
+        enableSwitchBtn: true,
+        switchColor: 'grey lighten-2',
+      },
       clientData: {
         clientLocation: this.$auth.user.address || null,
         clientHairStyle: null,
+        // snipsList: [],
         dataIndex: 0,
       },
       loadingData: false,
@@ -104,6 +143,50 @@ export default {
     },
   },
   mounted() {
+    this.socket = this.$nuxtSocket({
+      name: 'main',
+      persist: 'true',
+    })
+    this.socket.emit('user_connected', { user: this.$auth.user.username })
+
+    this.socket.on('snipper_accept_job_offer', (msg, cb) => {
+      if (
+        this.$auth.user.type === 'Client' &&
+        this.$auth.user.username === msg.to.username
+      ) {
+        // eslint-disable-next-line no-console
+        console.log(msg)
+        this.$store.dispatch('snackalert/showSnackbar', {
+          msg: msg.message,
+          color: 'success',
+        })
+        this.snipperViewDialogOptions.enableCloseBtn = true
+        this.snipperViewDialogOptions.enableRequestBtn = true
+        this.snipperViewDialogOptions.enableSwitchBtn = true
+
+        this.showSnipperDialog = false
+        this.dataAvailable = false
+        this.$router.push('/dashboard/client/orders')
+      }
+    })
+    this.socket.on('snipper_reject_job_offer', (msg, cb) => {
+      if (
+        this.$auth.user.type === 'Client' &&
+        this.$auth.user.username === msg.to.username
+      ) {
+        // eslint-disable-next-line no-console
+        console.log(msg)
+        this.$store.dispatch('snackalert/showSnackbar', {
+          msg: msg.message,
+          color: 'red',
+        })
+        this.snipperViewDialogOptions.enableCloseBtn = true
+        this.snipperViewDialogOptions.enableRequestBtn = false
+        this.snipperViewDialogOptions.enableSwitchBtn = true
+
+        this.snipperViewDialogOptions.switchColor = 'blue-grey lighten-1'
+      }
+    })
     try {
       const options = {
         // types: ['cities'],

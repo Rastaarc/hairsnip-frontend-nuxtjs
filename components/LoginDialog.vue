@@ -109,7 +109,10 @@ export default {
     },
   },
   mounted() {
-    this.socket = this.$nuxtSocket({})
+    // this.socket = this.$nuxtSocket({
+    //   name: 'main',
+    //   persist: 'true',
+    // })
   },
   methods: {
     clearFormData() {
@@ -152,7 +155,8 @@ export default {
         this.$store.commit('dialog/updateLoginDialog', {
           dState: false,
         })
-        this.socket.emit('login', { username: this.username })
+        // this.socket.emit('user_connected', { user: this.username })
+        // this.socket.emit('login', { username: this.username })
         this.$router.push('/dashboard')
       } catch (e) {
         this.loading = false

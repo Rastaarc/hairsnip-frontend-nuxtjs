@@ -12,6 +12,7 @@
       v-if="newJobAlert"
       :snip-data="snip"
       :client-data="client"
+      :socket-client-id="socketClientId"
       :open-dialog="showNewJobAlert"
       @closeClientViewDialog="removeNewJobAlert"
     />
@@ -42,6 +43,7 @@ export default {
   },
   data() {
     return {
+      socketClientId: null,
       socket: null,
       mainColor: 'primary',
       mobile: this.$vuetify.breakpoint.width <= 700,
@@ -75,30 +77,57 @@ export default {
     },
   },
   mounted() {
-    this.socket = this.$nuxtSocket({})
+    this.socket = this.$nuxtSocket({
+      name: 'main',
+      persist: 'true',
+    })
     if (this.$auth.loggedIn) {
       this.user = this.$auth.user.username
     }
     this.socket.on('connect', (msg, cb) => {
       // eslint-disable-next-line no-console
-      console.log(`I'm connected to SocketIO`)
-      this.socket.emit('user_connected', { user: this.user })
+      console.log(`I'm connected to SocketIO with ID ${this.socket.id}`)
+      // this.socket.emit('user_connected', { user: this.user })
     })
+    // this.socket.emit('user_connected', { user: this.user })
     this.socket.on('disconnect', (msg, cb) => {
       // eslint-disable-next-line no-console
       console.log(`I'm disconnected from SocketIO`)
-      this.socket.emit('user_disconnected', { user: this.user })
+      // this.socket.emit('user_disconnected', { user: this.user })
+      this.socket.open()
     })
     this.socket.on('job_alert', (msg, cb) => {
-      if (this.$auth.user.type === 'Snipper') {
+      if (
+        this.$auth.user.type === 'Snipper' &&
+        this.$auth.user.username === msg.to.username
+      ) {
         // eslint-disable-next-line no-console
         console.log(`Job Alert`)
         // eslint-disable-next-line no-console
         console.log(msg)
         this.snip = msg.snip
         this.client = msg.client
+        this.socketClientId = msg.id
         this.showNewJobAlert = true
         this.newJobAlert = true
+      }
+    })
+    this.socket.on('accept_job_offer', (msg, cb) => {
+      if (
+        this.$auth.user.type === 'Snipper' &&
+        this.$auth.user.username === msg.from.username
+      ) {
+        // eslint-disable-next-line no-console
+        console.log(`Job Accepted by you`)
+        // eslint-disable-next-line no-console
+        console.log(msg)
+        this.$store.dispatch('snackalert/showSnackbar', {
+          msg: 'Job Accepted by you successfully',
+          color: 'success',
+        })
+        this.showNewJobAlert = false
+        this.newJobAlert = false
+        this.$router.push('/dashboard/snipper/jobs')
       }
     })
   },

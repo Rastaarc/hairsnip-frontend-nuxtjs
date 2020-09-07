@@ -23,6 +23,10 @@
             </div>
           </v-col>
           <v-col align-self="center" cols="12" class="text-center">
+            <p>Snip: {{ snipData.name }}</p>
+            <p>Charges: {{ snipData.price }}</p>
+          </v-col>
+          <v-col align-self="center" cols="12" class="text-center">
             <v-btn
               color="primary"
               text
@@ -30,16 +34,18 @@
               outlined
               small
               :loading="waitingForSnipperRespond"
+              :disable="enableRequestBtn"
               @click="sendRequestToSnipper"
               >MAKE REQUEST</v-btn
             ><br /><br />
             <v-btn
-              color="grey lighten-2"
+              :color="switchColor"
               text
               rounded
               outlined
               x-small
               :loading="loadingNewSnipper"
+              :disable="enableSwitchBtn"
               @click="closeDialog"
               >SWITCH SNIPPER</v-btn
             >
@@ -55,7 +61,13 @@
           :to="`/profile/${snipperData.username.toLowerCase()}`"
           >View Profile</v-btn
         >
-        <v-btn text color="red acent-3" @click="closeDialog">Close</v-btn>
+        <v-btn
+          text
+          color="red acent-3"
+          :disable="enableCloseBtn"
+          @click="closeDialog"
+          >Close</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -67,6 +79,10 @@ export default {
     openDialog: {
       type: Boolean,
       default: false,
+    },
+    dialogOptions: {
+      type: Object,
+      default: () => {},
     },
     snipperData: {
       type: Object,
@@ -91,16 +107,24 @@ export default {
       loadingNewSnipper: false,
     }
   },
-  computed: {},
+  computed: {
+    switchColor() {
+      return this.dialogOptions.switchColor || 'grey lighten-2'
+    },
+    enableCloseBtn() {
+      return this.dialogOptions.enableCloseBtn || false
+    },
+    enableRequestBtn() {
+      return this.dialogOptions.enableRequestBtn || false
+    },
+    enableSwitchBtn() {
+      return this.dialogOptions.enableSwitchBtn || false
+    },
+  },
   mounted() {
-    this.socket = this.$nuxtSocket({})
-    this.socket.on('snipper_accept_job_offer', (msg, cb) => {
-      // eslint-disable-next-line no-console
-      console.log(msg)
-    })
-    this.socket.on('snipper_reject_job_offer', (msg, cb) => {
-      // eslint-disable-next-line no-console
-      console.log(msg)
+    this.socket = this.$nuxtSocket({
+      name: 'main',
+      persist: 'true',
     })
   },
   methods: {
@@ -112,7 +136,8 @@ export default {
       this.socket.emit('new_job_alert', {
         client: this.$auth.user,
         snip: this.snipData,
-        to: this.snipperData.id,
+        to: this.snipperData,
+        sid: this.socket.id,
       })
     },
   },

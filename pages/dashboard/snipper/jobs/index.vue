@@ -33,9 +33,9 @@ export default {
   }) {
     const { data } = await $axios.get('user/get/jobs/')
     // eslint-disable-next-line no-console
-    console.log(data)
+    // console.log(data)
     // eslint-disable-next-line no-console
-    console.log(data.data)
+    // console.log(data.data)
     return {
       dt: data.data,
     }
