@@ -55,81 +55,73 @@
           </v-row>
           <v-row v-else-if="cardPaymentMode">
             <v-col align-self="center" cols="12">
-              <h5 class="mt-5 mb-5 text-center text-h6 primary--text">
+              <h5 class="mt-5 text-center text-h6 primary--text">
                 CARD PAYMENT MODE
               </h5>
             </v-col>
             <v-col align-self="center" cols="12">
-              <p class="text-center primary--text">
-                <v-img
-                  src="/credit_card.png"
-                  width="260"
-                  height="153"
-                  class="mx-auto'"
-                />
-              </p>
+              <v-img
+                src="/credit_card.png"
+                width="260"
+                height="153"
+                class="mx-auto'"
+              />
             </v-col>
-            <v-col>
-              <v-row>
-                <v-col cols="12">
-                  <v-text-field
-                    v-model="card.number"
-                    :rules="cardRules.number"
-                    label="Credit card number"
-                    type="number"
-                    prepend-inner-icon="mdi-account"
-                    required
-                  >
-                  </v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="6">
-                  <v-text-field
-                    v-model="card.monthYear"
-                    :rules="cardRules.monthYear"
-                    label="MM/YY"
-                    prepend-inner-icon="mdi-account"
-                    required
-                  >
-                  </v-text-field>
-                </v-col>
-                <v-col cols="6">
-                  <v-text-field
-                    v-model="card.cvv"
-                    :rules="cardRules.cvv"
-                    label="CVV"
-                    prepend-inner-icon="mdi-account"
-                    required
-                  >
-                  </v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="12">
-                  <v-text-field
-                    v-model="card.nameOnCard"
-                    :rules="cardRules.nameOnCard"
-                    label="Name on card"
-                    prepend-inner-icon="mdi-account"
-                    required
-                  >
-                  </v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col align-self="center" cols="12" class="mt-3 text-center">
-                  <v-btn
-                    color="primary"
-                    elevation="2"
-                    small
-                    :loading="cardPaymentLoading"
-                    @click="makeCardPayment"
-                    >CONTINUE</v-btn
-                  >
-                </v-col>
-              </v-row>
-            </v-col>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="card.number"
+                  :rules="cardRules.number"
+                  label="Credit card number"
+                  type="number"
+                  required
+                >
+                </v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="6">
+                <v-text-field
+                  v-model="card.monthYear"
+                  :rules="cardRules.monthYear"
+                  label="MM/YY"
+                  required
+                >
+                </v-text-field>
+              </v-col>
+              <v-col cols="6">
+                <v-text-field
+                  v-model="card.cvv"
+                  :rules="cardRules.cvv"
+                  label="CVV"
+                  required
+                >
+                </v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="card.nameOnCard"
+                  :rules="cardRules.nameOnCard"
+                  label="Name on card"
+                  required
+                >
+                </v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col align-self="center" cols="12" class="mt-3 text-center">
+                <v-btn
+                  color="primary"
+                  elevation="2"
+                  small
+                  :loading="cardPaymentLoading"
+                  @click="makeCardPayment"
+                  >CONTINUE</v-btn
+                >
+              </v-col>
+            </v-row>
           </v-row>
         </v-row>
       </v-card-text>
@@ -181,12 +173,12 @@ export default {
         nameOnCard: null,
       },
       cardRules: {
-        number: [(v) => /\d{16}/.test(v) || 'Invalid Credit Card Number'],
+        number: [(v) => /^\d{16}$/.test(v) || 'Invalid Credit Card Number'],
         monthYear: [
-          (v) => /\d{2}\/\d{2}/.test(v) || 'Invalid Month/Year supplied',
+          (v) => /^\d{2}\/\d{2}$/.test(v) || 'Invalid Month/Year supplied',
         ],
-        cvv: [(v) => /\d{3}/.testv || 'Invalid CVV number supplied'],
-        nameOnCard: [(v) => /\w{7,}/.test(v) || 'Please enter a valid name'],
+        cvv: [(v) => /^\d{3}$/.test(v) || 'Invalid CVV number supplied'],
+        nameOnCard: [(v) => /^\w{7,}$/.test(v) || 'Please enter a valid name'],
       },
     }
   },
