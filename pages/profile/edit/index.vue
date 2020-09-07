@@ -163,10 +163,10 @@
                 <v-btn :loading="loading" color="primary" outlined type="submit"
                   >Update</v-btn
                 >
-                API Key {{ $config.GMAP_API_KEY }}
               </v-col>
             </v-row>
           </v-form>
+          API Key ==> {{ $config.GMAP_API_KEY }}
         </v-card-text>
       </v-card>
     </v-col>
@@ -343,7 +343,7 @@ export default {
       title: 'Edit Profile',
       script: [
         {
-          src: `https://maps.googleapis.com/maps/api/js?key=AIzaSyAbop4UCMioFxvy3C1sPreT8BpCQvZfsb0&libraries=places`,
+          src: `https://maps.googleapis.com/maps/api/js?key=AIzaSyB2Cp-EadvDthMRaOcM2vszEMz9kiDa1MM&libraries=places`,
           // src: `https://maps.googleapis.com/maps/api/js?key=${this.$config.GMAP_API_KEY}&libraries=places`,
         },
       ],

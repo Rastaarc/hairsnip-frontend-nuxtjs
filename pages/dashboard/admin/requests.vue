@@ -6,6 +6,13 @@
       :title="title"
       :loading="loadingData"
     >
+      <template v-slot:actionBtn>
+        <div>
+          <v-btn text outlined color="primary" @click="showNewSnipDialog">
+            <v-icon small left>mdi-plus</v-icon> Add New
+          </v-btn>
+        </div>
+      </template>
     </DataTableCard>
   </div>
 </template>
@@ -14,7 +21,7 @@
 import DataTableCard from '@/components/DataTableCard'
 
 export default {
-  middleware: 'auth-snipper',
+  middleware: 'auth-admin',
   components: {
     DataTableCard,
   },
@@ -31,7 +38,7 @@ export default {
     error,
     $axios,
   }) {
-    const { data } = await $axios.get('user/get/jobs/')
+    const { data } = await $axios.get('admin/get/jobs/')
     // eslint-disable-next-line no-console
     console.log(data)
     // eslint-disable-next-line no-console
@@ -42,12 +49,13 @@ export default {
   },
   data() {
     return {
-      title: 'My Jobs',
+      title: 'Requests Management',
       loadingData: false,
       datatable: {
         headers: [
           { text: 'ID', value: 'id' },
           { text: 'Client', value: 'client' },
+          { text: 'Snipper', value: 'snipper' },
           { text: 'Details', value: 'details' },
           { text: 'Created On', value: 'created_on' },
           { text: 'Actions', value: 'actions' },
@@ -64,6 +72,7 @@ export default {
           dataHolder.push({
             id: d.id,
             details: d.purpose,
+            snipper: d.snipper,
             client: d.client,
             created_on: d.created_on,
           })
@@ -79,14 +88,15 @@ export default {
   methods: {
     async updateDataTable() {
       this.loadingData = true
-      const { data } = await this.$axios.get('user/get/jobs/')
+      const { data } = await this.$axios.get('admin/get/jobs/')
       const dataHolder = []
       if (data.data) {
         for (const d of data.data) {
           dataHolder.push({
             id: d.id,
-            purpose: d.purpose,
-            doc_status: d.doc_status,
+            details: d.purpose,
+            snipper: d.snipper,
+            client: d.client,
             created_on: d.created_on,
           })
         }

@@ -5,7 +5,7 @@
         <Slider :items="items" />
       </v-col>
     </v-row>
-    <v-row class="text-center mt-5">
+    <v-row v-if="!$auth.loggedIn" class="text-center mt-5">
       <v-col cols="12" sm="10" md="8" class="mx-auto">
         <p class="font-weight-bold text-h4 text-capitalize">
           Out of the box, find a trusted Snipper in your area
@@ -97,6 +97,7 @@
           Us Today for a perfect livestyle, we are the best.
         </p>
         <v-btn
+          v-if="!$auth.loggedIn"
           class="mt-3 mb-3"
           color="primary"
           type="submit"
@@ -156,11 +157,6 @@ export default {
     disabled() {
       return !this.location
     },
-  },
-  mounted() {
-    if (this.$auth.loggedIn) {
-      this.$router.push('/dashboard')
-    }
   },
   methods: {
     openSnipperSignup() {

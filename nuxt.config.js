@@ -4,7 +4,8 @@ export default {
   publicRuntimeConfig: {},
   privateRuntimeConfig: {
     GMAP_API_KEY:
-      process.env.GMAP_API_KEY || 'AIzaSyAbop4UCMioFxvy3C1sPreT8BpCQvZfsb0',
+      process.env.GMAP_API_KEY ||
+      'AIzaSyAbop4UCMioFxvy3C1sPreT8BpCQvZfsb0AIzaSyB2Cp-EadvDthMRaOcM2vszEMz9kiDa1MM',
   },
   /*
    ** Nuxt rendering mode

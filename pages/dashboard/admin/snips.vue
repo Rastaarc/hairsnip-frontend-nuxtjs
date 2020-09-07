@@ -109,7 +109,7 @@ export default {
     })
     this.socket.on('updateSnipsUI', () => {
       // eslint-disable-next-line no-console
-      console.log('update snip')
+      console.log('update snip from socketio')
       this.updateSnipsTable()
     })
   },

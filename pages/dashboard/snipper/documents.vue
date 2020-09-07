@@ -1,11 +1,18 @@
 <template>
   <div>
     <DataTableCard
-      callee="jobs"
+      callee="documents"
       :datatable="datatable"
       :title="title"
       :loading="loadingData"
     >
+      <template v-slot:actionBtn>
+        <div>
+          <v-btn text outlined color="primary" @click="showNewDocumentDialog"
+            ><v-icon small left>mdi-plus</v-icon> Add New</v-btn
+          >
+        </div>
+      </template>
     </DataTableCard>
   </div>
 </template>
@@ -31,24 +38,21 @@ export default {
     error,
     $axios,
   }) {
-    const { data } = await $axios.get('user/get/jobs/')
-    // eslint-disable-next-line no-console
-    console.log(data)
-    // eslint-disable-next-line no-console
-    console.log(data.data)
+    const { data } = await $axios.get('user/get/documents/')
     return {
       dt: data.data,
     }
   },
   data() {
     return {
-      title: 'My Jobs',
+      title: 'Documents Management',
+      showDocumentDialog: false,
       loadingData: false,
       datatable: {
         headers: [
           { text: 'ID', value: 'id' },
-          { text: 'Client', value: 'client' },
-          { text: 'Details', value: 'details' },
+          { text: 'Purpose', value: 'purpose' },
+          { text: 'Verification Status', value: 'doc_status' },
           { text: 'Created On', value: 'created_on' },
           { text: 'Actions', value: 'actions' },
         ],
@@ -63,8 +67,8 @@ export default {
         for (const d of this.dt) {
           dataHolder.push({
             id: d.id,
-            details: d.purpose,
-            client: d.client,
+            purpose: d.purpose,
+            doc_status: d.doc_status,
             created_on: d.created_on,
           })
         }
@@ -77,9 +81,9 @@ export default {
     this.datatable.items = this.fillDatatable
   },
   methods: {
-    async updateDataTable() {
+    async updateDatatable() {
       this.loadingData = true
-      const { data } = await this.$axios.get('user/get/jobs/')
+      const { data } = await this.$axios.get('user/get/documents/')
       const dataHolder = []
       if (data.data) {
         for (const d of data.data) {
@@ -93,6 +97,12 @@ export default {
       }
       this.loadingData = false
       this.datatable.items = dataHolder
+    },
+    showNewDocumentDialog() {
+      this.showDocumentDialog = true
+    },
+    closeDialog() {
+      this.showDocumentDialog = false
     },
   },
   head() {

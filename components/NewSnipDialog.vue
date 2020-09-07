@@ -71,7 +71,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 export default {
   props: {
     showDialog: {
@@ -88,11 +87,23 @@ export default {
         price: '',
         description: '',
       },
+      formRules: {
+        snipNameRules: [
+          (v) => !!v || 'Name is required',
+          (v) => v.length <= 30 || 'Maximum length is 30',
+        ],
+        snipPriceRules: [
+          (v) => !!v || 'Price is required',
+          (v) => /\d{3,30}/.test(v) || 'Please enter a valid price',
+        ],
+        snipDescRules: [
+          (v) => !!v || 'Description is required',
+          (v) => v.length <= 250 || 'Maximum length is 250',
+        ],
+      },
     }
   },
-  computed: {
-    ...mapState('rules', ['formRules']),
-  },
+  computed: {},
   mounted() {
     this.socket = this.$nuxtSocket({
       channel: '/admin',
