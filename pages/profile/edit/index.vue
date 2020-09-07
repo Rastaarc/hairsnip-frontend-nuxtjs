@@ -43,6 +43,7 @@
             <v-row>
               <v-col>
                 <v-text-field
+                  id="userAddress"
                   ref="address"
                   v-model="edit.address"
                   label="Address"
@@ -232,7 +233,7 @@ export default {
     }
     // eslint-disable-next-line no-undef
     this.google = new google.maps.places.Autocomplete(
-      this.$refs.address,
+      document.getElementById('userAdress'),
       options
     )
   },
