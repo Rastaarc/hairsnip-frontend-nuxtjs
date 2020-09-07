@@ -3,7 +3,8 @@ import colors from 'vuetify/es5/util/colors'
 export default {
   publicRuntimeConfig: {},
   privateRuntimeConfig: {
-    GMAP_API_KEY: process.env.GMAP_API_KEY || '',
+    GMAP_API_KEY:
+      process.env.GMAP_API_KEY || 'AIzaSyAbop4UCMioFxvy3C1sPreT8BpCQvZfsb0',
   },
   /*
    ** Nuxt rendering mode
