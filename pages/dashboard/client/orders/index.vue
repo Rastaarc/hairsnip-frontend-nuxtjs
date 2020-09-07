@@ -5,18 +5,26 @@
       :datatable="datatable"
       :title="title"
       :loading="loadingData"
+      @updateClient="updateClient($event)"
     >
     </DataTableCard>
+    <PaymentViewDialog
+      :open-dialog="openPaymentDialog"
+      @closePaymentModeViewDialog="closePaymentModeViewDialog"
+    >
+    </PaymentViewDialog>
   </div>
 </template>
 
 <script>
 import DataTableCard from '@/components/DataTableCard'
+import PaymentViewDialog from '@/components/PaymentViewDialog'
 
 export default {
   middleware: 'auth-client',
   components: {
     DataTableCard,
+    PaymentViewDialog,
   },
   async asyncData({
     isDev,
@@ -32,10 +40,6 @@ export default {
     $axios,
   }) {
     const { data } = await $axios.get('user/get/jobs/')
-    // eslint-disable-next-line no-console
-    console.log(data)
-    // eslint-disable-next-line no-console
-    console.log(data.data)
     return {
       dt: data.data,
     }
@@ -44,11 +48,12 @@ export default {
     return {
       title: 'My Orders',
       loadingData: false,
+      openPaymentDialog: false,
       datatable: {
         headers: [
           { text: 'ID', value: 'id' },
           { text: 'Snipper', value: 'snipper' },
-          { text: 'Details', value: 'details' },
+          { text: 'Detail', value: 'details' },
           { text: 'Created On', value: 'created_on' },
           { text: 'Actions', value: 'actions' },
         ],
@@ -75,8 +80,16 @@ export default {
   },
   mounted() {
     this.datatable.items = this.fillDatatable
+    this.openPaymentDialog = true
   },
   methods: {
+    closePaymentModeViewDialog() {
+      this.openPaymentDialog = false
+    },
+    updateClient(item) {
+      // eslint-disable-next-line no-console
+      console.log(item)
+    },
     async updateDataTable() {
       this.loadingData = true
       const { data } = await this.$axios.get('user/get/jobs/')

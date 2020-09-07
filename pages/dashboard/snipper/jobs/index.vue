@@ -5,6 +5,7 @@
       :datatable="datatable"
       :title="title"
       :loading="loadingData"
+      @updateSnipper="updateSnipper($event)"
     >
     </DataTableCard>
   </div>
@@ -77,6 +78,10 @@ export default {
     this.datatable.items = this.fillDatatable
   },
   methods: {
+    updateSnipper(item) {
+      // eslint-disable-next-line no-console
+      console.log(item)
+    },
     async updateDataTable() {
       this.loadingData = true
       const { data } = await this.$axios.get('user/get/jobs/')
