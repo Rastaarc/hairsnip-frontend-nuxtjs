@@ -289,6 +289,9 @@ export default {
           const place = this.autocomplete.getPlace()
           // eslint-disable-next-line no-console
           console.log(place)
+          if (place.formatted_address) {
+            this.edit.address = place.formatted_address
+          }
         })
       } catch (error) {
         // eslint-disable-next-line no-console
