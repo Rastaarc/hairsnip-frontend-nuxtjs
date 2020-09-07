@@ -94,6 +94,14 @@ export default {
   computed: {},
   mounted() {
     this.socket = this.$nuxtSocket({})
+    this.socket.on('snipper_accept_job_offer', (msg, cb) => {
+      // eslint-disable-next-line no-console
+      console.log(msg)
+    })
+    this.socket.on('snipper_reject_job_offer', (msg, cb) => {
+      // eslint-disable-next-line no-console
+      console.log(msg)
+    })
   },
   methods: {
     closeDialog() {
@@ -104,7 +112,7 @@ export default {
       this.socket.emit('new_job_alert', {
         client: this.$auth.user,
         snip: this.snipData,
-        to: this.snipperData.username,
+        to: this.snipperData.id,
       })
     },
   },

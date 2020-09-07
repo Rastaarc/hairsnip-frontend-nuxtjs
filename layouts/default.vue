@@ -92,8 +92,10 @@ export default {
     this.socket.on('job_alert', (msg, cb) => {
       if (this.$auth.user.type === 'Snipper') {
         // eslint-disable-next-line no-console
-        console.log(`Job Alert ${msg}`)
-        this.snip = { title: 'Gallas', price: 500 }
+        console.log(`Job Alert`)
+        // eslint-disable-next-line no-console
+        console.log(msg)
+        this.snip = msg.snip
         this.client = msg.client
         this.showNewJobAlert = true
         this.newJobAlert = true

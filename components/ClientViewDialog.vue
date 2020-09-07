@@ -4,7 +4,7 @@
       <v-card-text class="mt-5">
         <v-row align="center" justify="center" align-content="center">
           <v-col align-self="center" cols="12">
-            <h3 class="text-center text-h5 primary--text">
+            <h3 class="mt-5 text-center text-h5 primary--text">
               New Job Alert
             </h3>
           </v-col>
@@ -23,7 +23,7 @@
             </div>
           </v-col>
           <v-col align-self="center" cols="12" class="text-center">
-            <p>Snip: {{ snipData.title }}</p>
+            <p>Snip: {{ snipData.name }}</p>
             <p>Charges: {{ snipData.price }}</p>
           </v-col>
           <v-col align-self="center" cols="12" class="text-center">
@@ -33,7 +33,7 @@
               rounded
               outlined
               small
-              @click="closeDialog"
+              @click="acceptRequest"
               >ACCCEPT</v-btn
             >
             <v-btn
@@ -41,8 +41,8 @@
               text
               rounded
               outlined
-              x-small
-              @click="closeDialog"
+              small
+              @click="rejectRequest"
               >REJECT</v-btn
             >
           </v-col>
@@ -96,6 +96,22 @@ export default {
     this.socket = this.$nuxtSocket({})
   },
   methods: {
+    acceptRequest() {
+      this.socket.emit('new_job_alert_accepted', {
+        to: this.clientData.id,
+        from: this.$auth.user,
+        snip: this.snipData,
+      })
+      this.closeDialog()
+    },
+    rejectRequest() {
+      this.socket.emit('new_job_alert_rejected', {
+        to: this.clientData.id,
+        from: this.$auth.user,
+        snip: this.snipData,
+      })
+      this.closeDialog()
+    },
     closeDialog() {
       this.$emit('closeClientViewDialog')
     },
