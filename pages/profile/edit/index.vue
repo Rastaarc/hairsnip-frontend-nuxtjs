@@ -163,6 +163,7 @@
                 <v-btn :loading="loading" color="primary" outlined type="submit"
                   >Update</v-btn
                 >
+                API Key {{ $config.GMAP_API_KEY }}
               </v-col>
             </v-row>
           </v-form>
@@ -173,12 +174,11 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 export default {
   middleware: 'authenticate',
   data() {
     return {
-      google: null,
+      autocomplete: {},
       user_data: this.$auth.user,
       showPass: false,
       showPass1: false,
@@ -214,28 +214,84 @@ export default {
         'Sat',
         'Sun',
       ],
+      formRules: {
+        usertypeRules: [(v) => !!v || 'User Type is required'],
+        fullNameRules: [
+          (v) => !!v || 'Full name is required',
+          (v) => v.length <= 60 || 'Maximum length is 50',
+        ],
+        emailRules: [
+          (v) => !!v || 'Email is required',
+          (v) => /.+@.+/.test(v) || 'Email must be valid',
+        ],
+        phoneRules: [
+          (v) => !!v || 'Phone number is required',
+          (v) =>
+            /0[789][01]\d{8}/.test(v) || 'Please enter a valid Nigeria mobile',
+          (v) => v.length <= 11 || 'Please enter a valid Nigeria mobile',
+        ],
+        usernameRules: [
+          (v) => !!v || 'Username is required',
+          (v) => v.length <= 15 || 'Maximum length is 15',
+        ],
+        passwordRules: [
+          (v) => !!v || 'Password is required',
+          (v) => v.length <= 32 || 'Maximum length is 32',
+        ],
+        passwordRules2: [(v) => v.length <= 32 || 'Maximum length is 32'],
+        aboutRules: [(v) => v.length <= 250 || 'Maximum length is 250'],
+        snipNameRules: [
+          (v) => !!v || 'Name is required',
+          (v) => v.length <= 30 || 'Maximum length is 30',
+        ],
+        snipPriceRules: [
+          (v) => !!v || 'Price is required',
+          (v) => /\d{3,30}/.test(v) || 'Please enter a valid price',
+        ],
+        snipDescRules: [
+          (v) => !!v || 'Description is required',
+          (v) => v.length <= 250 || 'Maximum length is 250',
+        ],
+      },
     }
   },
   computed: {
-    ...mapState('rules', ['formRules']),
     ex() {
       return this.edit.skills
     },
   },
   mounted() {
-    const options = {
-      types: ['cities'],
-      // eslint-disable-next-line no-undef
-      bounds: new google.maps.LatLngBounds(
+    this.$nextTick(() => {
+      try {
+        const options = {
+          types: ['cities'],
+          // eslint-disable-next-line no-undef
+          bounds: new google.maps.LatLngBounds(
+            // eslint-disable-next-line no-undef
+            new google.maps.LatLng(9.081999, 8.675277)
+          ),
+        }
         // eslint-disable-next-line no-undef
-        new google.maps.LatLng(9.081999, 8.675277)
-      ),
-    }
-    // eslint-disable-next-line no-undef
-    this.google = new google.maps.places.Autocomplete(
-      document.getElementById('userAdress'),
-      options
-    )
+        const googleAPI = new google.maps.places.Autocomplete(
+          document.getElementById('userAdress'),
+          // this.$refs.address,
+          options
+        )
+        if (typeof googleAPI !== 'undefined') {
+          this.autocomplete = googleAPI
+        }
+        // eslint-disable-next-line no-console
+        console.log(this.autocomplete)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error)
+        this.$store.dispatch('snackalert/showSnackbar', {
+          msg:
+            'Error occurred while loading google autocomplete API, please check your network connection',
+          color: 'red',
+        })
+      }
+    })
   },
   methods: {
     validateNewPass() {
@@ -287,7 +343,8 @@ export default {
       title: 'Edit Profile',
       script: [
         {
-          src: `https://maps.googleapis.com/maps/api/js?key=${this.$config.GMAP_API_KEY}&libraries=places&v=weekly`,
+          src: `https://maps.googleapis.com/maps/api/js?key=AIzaSyAbop4UCMioFxvy3C1sPreT8BpCQvZfsb0&libraries=places`,
+          // src: `https://maps.googleapis.com/maps/api/js?key=${this.$config.GMAP_API_KEY}&libraries=places`,
         },
       ],
     }
