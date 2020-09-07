@@ -63,7 +63,10 @@
       :snipper-data="snipper"
       :snip-data="snip"
       :dialog-options="snipperViewDialogOptions"
+      :other-data="snipperOthersData"
       @closeSnipperViewDialog="closeDialog"
+      @switchSnipper="loadAnotherSnipper($event)"
+      @makingRequest="makingRequest"
     />
   </div>
 </template>
@@ -109,21 +112,27 @@ export default {
       showSnipperDialog: false,
       autocomplete: null,
       snipperViewDialogOptions: {
-        enableCloseBtn: true,
-        enableRequestBtn: true,
-        enableSwitchBtn: true,
+        disableCloseBtn: true,
+        disableRequestBtn: true,
+        disableSwitchBtn: true,
         switchColor: 'grey lighten-2',
+        requestBtnLoading: false,
       },
       clientData: {
         clientLocation: this.$auth.user.address || null,
         clientHairStyle: null,
         // snipsList: [],
-        dataIndex: 0,
+        nextDataIndex: 0,
       },
       loadingData: false,
       snipper: null,
       snip: null,
       dataAvailable: false,
+      snipperOthersData: {
+        totalSnippers: null,
+        nextDataIndex: null,
+        switchSnipperLoading: false,
+      },
       rules: {
         style: [(v) => !!v || 'Please enter the hair style'],
         address: [(v) => !!v || 'Please enter your location'],
@@ -154,15 +163,14 @@ export default {
         this.$auth.user.type === 'Client' &&
         this.$auth.user.username === msg.to.username
       ) {
-        // eslint-disable-next-line no-console
-        console.log(msg)
+        this.requestStop()
         this.$store.dispatch('snackalert/showSnackbar', {
           msg: msg.message,
           color: 'success',
         })
-        this.snipperViewDialogOptions.enableCloseBtn = true
-        this.snipperViewDialogOptions.enableRequestBtn = true
-        this.snipperViewDialogOptions.enableSwitchBtn = true
+        this.snipperViewDialogOptions.disableCloseBtn = false
+        this.snipperViewDialogOptions.disableRequestBtn = false
+        this.snipperViewDialogOptions.disableSwitchBtn = false
 
         this.showSnipperDialog = false
         this.dataAvailable = false
@@ -174,16 +182,31 @@ export default {
         this.$auth.user.type === 'Client' &&
         this.$auth.user.username === msg.to.username
       ) {
-        // eslint-disable-next-line no-console
-        console.log(msg)
+        this.requestStop()
         this.$store.dispatch('snackalert/showSnackbar', {
           msg: msg.message,
           color: 'red',
         })
-        this.snipperViewDialogOptions.enableCloseBtn = true
-        this.snipperViewDialogOptions.enableRequestBtn = false
-        this.snipperViewDialogOptions.enableSwitchBtn = true
+        this.snipperViewDialogOptions.disableCloseBtn = false
+        this.snipperViewDialogOptions.disableRequestBtn = false
+        this.snipperViewDialogOptions.disableSwitchBtn = false
 
+        this.snipperViewDialogOptions.switchColor = 'blue-grey lighten-1'
+      }
+    })
+    this.socket.on('no_respond_from_snipper', (msg, cb) => {
+      if (
+        this.$auth.user.type === 'Client' &&
+        this.$auth.user.username === msg.to.username
+      ) {
+        this.requestStop()
+        this.$store.dispatch('snackalert/showSnackbar', {
+          msg: msg.message,
+          color: 'red',
+        })
+        this.snipperViewDialogOptions.disableCloseBtn = false
+        this.snipperViewDialogOptions.disableRequestBtn = false
+        this.snipperViewDialogOptions.disableSwitchBtn = false
         this.snipperViewDialogOptions.switchColor = 'blue-grey lighten-1'
       }
     })
@@ -208,8 +231,6 @@ export default {
       if (typeof googleAPI !== 'undefined') {
         this.autocomplete = googleAPI
       }
-      // eslint-disable-next-line no-console
-      console.log(this.autocomplete)
       this.autocomplete.setFields(['formatted_address', 'name', 'geometry'])
       this.autocomplete.addListener('place_changed', () => {
         const place = this.autocomplete.getPlace()
@@ -230,10 +251,72 @@ export default {
     }
   },
   methods: {
+    makingRequest() {
+      this.snipperViewDialogOptions.requestBtnLoading = true
+      this.snipperViewDialogOptions.disableCloseBtn = true
+      this.snipperViewDialogOptions.disableRequestBtn = true
+      this.snipperViewDialogOptions.disableSwitchBtn = true
+      /* setTimeout(() => {
+        if (!this.noRespond) {
+          this.requestStop()
+        }
+      }, 35000) */
+    },
+    requestStop() {
+      this.snipperViewDialogOptions.requestBtnLoading = false
+      this.snipperViewDialogOptions.disableCloseBtn = false
+      this.snipperViewDialogOptions.disableRequestBtn = false
+      this.snipperViewDialogOptions.disableSwitchBtn = false
+    },
     closeDialog() {
+      this.snipperOthersData.switchSnipperLoading = false
+      this.snipperViewDialogOptions.switchColor = null
       this.showSnipperDialog = false
     },
+    async loadAnotherSnipper(data) {
+      this.snipperViewDialogOptions.disableCloseBtn = true
+      this.snipperViewDialogOptions.disableRequestBtn = true
+      this.snipperViewDialogOptions.disableSwitchBtn = true
+      this.snipperViewDialogOptions.switchColor = 'blue-grey lighten-1'
+      this.snipperOthersData.switchSnipperLoading = true
+
+      this.clientData.nextDataIndex = data.data
+      const valid = this.$refs.requestForm.validate()
+      if (!valid) {
+        this.$store.dispatch('snackalert/showSnackbar', {
+          msg: 'Please fix all the errors in your form first',
+          color: 'red',
+        })
+      }
+      try {
+        const { data } = await this.$axios.post('user/load/snipper/', {
+          data: this.clientData,
+        })
+        if (data.error) {
+          this.$store.dispatch('snackalert/showSnackbar', {
+            msg: data.msg,
+            color: 'red',
+          })
+        } else {
+          this.snipperOthersData.switchSnipperLoading = false
+          this.snipper = data.snipper
+          this.snip = data.snip
+          this.snipperOthersData.totalSnippers = data.totalSnippers
+          this.snipperOthersData.nextDataIndex = data.nextDataIndex
+          this.snipperViewDialogOptions.disableCloseBtn = false
+          this.snipperViewDialogOptions.disableRequestBtn = false
+          this.snipperViewDialogOptions.disableSwitchBtn = false
+        }
+      } catch (error) {
+        this.$store.dispatch('snackalert/showSnackbar', {
+          msg: 'Error occurred while processing your request. Please try again',
+          color: 'red',
+        })
+      }
+    },
     async showSnipper() {
+      // eslint-disable-next-line no-console
+      console.log(this.snipperViewDialogOptions)
       this.dataAvailable = false
       const valid = this.$refs.requestForm.validate()
       if (!valid) {
@@ -245,11 +328,10 @@ export default {
       }
       this.loadingData = true
       try {
+        this.clientData.nextDataIndex = 0
         const { data } = await this.$axios.post('user/load/snipper/', {
           data: this.clientData,
         })
-        // eslint-disable-next-line no-console
-        console.log(data)
         if (data.error) {
           this.$store.dispatch('snackalert/showSnackbar', {
             msg: data.msg,
@@ -260,6 +342,8 @@ export default {
           this.dataAvailable = true
           this.snipper = data.snipper
           this.snip = data.snip
+          this.snipperOthersData.totalSnippers = data.totalSnippers
+          this.snipperOthersData.nextDataIndex = data.nextDataIndex
         }
       } catch (error) {
         this.$store.dispatch('snackalert/showSnackbar', {
@@ -267,6 +351,8 @@ export default {
           color: 'red',
         })
       }
+      // eslint-disable-next-line no-console
+      console.log(this.snipperViewDialogOptions)
       this.loadingData = false
     },
   },

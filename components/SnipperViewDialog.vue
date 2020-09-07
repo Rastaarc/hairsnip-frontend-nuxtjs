@@ -33,8 +33,8 @@
               rounded
               outlined
               small
-              :loading="waitingForSnipperRespond"
-              :disable="enableRequestBtn"
+              :loading="requestBtnLoading"
+              :disable="disableRequestBtn"
               @click="sendRequestToSnipper"
               >MAKE REQUEST</v-btn
             ><br /><br />
@@ -45,8 +45,8 @@
               outlined
               x-small
               :loading="loadingNewSnipper"
-              :disable="enableSwitchBtn"
-              @click="closeDialog"
+              :disable="disableSwitchBtn"
+              @click="switchSnipper"
               >SWITCH SNIPPER</v-btn
             >
           </v-col>
@@ -64,7 +64,7 @@
         <v-btn
           text
           color="red acent-3"
-          :disable="enableCloseBtn"
+          :disable="disableCloseBtn"
           @click="closeDialog"
           >Close</v-btn
         >
@@ -81,6 +81,10 @@ export default {
       default: false,
     },
     dialogOptions: {
+      type: Object,
+      default: () => {},
+    },
+    otherData: {
       type: Object,
       default: () => {},
     },
@@ -104,21 +108,40 @@ export default {
   data() {
     return {
       waitingForSnipperRespond: false,
-      loadingNewSnipper: false,
     }
   },
   computed: {
+    requestBtnLoading() {
+      return this.dialogOptions.requestBtnLoading || false
+    },
     switchColor() {
       return this.dialogOptions.switchColor || 'grey lighten-2'
     },
-    enableCloseBtn() {
-      return this.dialogOptions.enableCloseBtn || false
+    disableCloseBtn() {
+      return this.dialogOptions.disableCloseBtn || false
     },
-    enableRequestBtn() {
-      return this.dialogOptions.enableRequestBtn || false
+    disableRequestBtn() {
+      return this.dialogOptions.disableRequestBtn || false
     },
-    enableSwitchBtn() {
-      return this.dialogOptions.enableSwitchBtn || false
+    disableSwitchBtn() {
+      return this.dialogOptions.disableSwitchBtn || false
+    },
+    totalSnippers() {
+      if (this.otherData.totalSnippers) {
+        return this.otherData.totalSnippers
+      } else {
+        return 1
+      }
+    },
+    nextDataIndex() {
+      if (this.otherData.nextDataIndex) {
+        return this.otherData.nextDataIndex
+      } else {
+        return 0
+      }
+    },
+    loadingNewSnipper() {
+      return this.otherData.switchSnipperLoading || false
     },
   },
   mounted() {
@@ -126,19 +149,31 @@ export default {
       name: 'main',
       persist: 'true',
     })
+    // eslint-disable-next-line no-console
+    console.log(this.dialogOptions)
   },
   methods: {
     closeDialog() {
       this.$emit('closeSnipperViewDialog')
     },
     sendRequestToSnipper() {
-      this.waitingForSnipperRespond = true
+      this.$emit('makingRequest')
       this.socket.emit('new_job_alert', {
         client: this.$auth.user,
         snip: this.snipData,
         to: this.snipperData,
         sid: this.socket.id,
       })
+    },
+    switchSnipper() {
+      if (this.nextDataIndex < this.totalSnippers) {
+        this.$emit('switchSnipper', { data: this.nextDataIndex })
+      } else {
+        this.$store.dispatch('snackalert/showSnackbar', {
+          msg: 'No more snipper data to fetch',
+          color: 'red',
+        })
+      }
     },
   },
 }

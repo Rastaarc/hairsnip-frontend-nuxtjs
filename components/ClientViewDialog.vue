@@ -33,6 +33,7 @@
               rounded
               outlined
               small
+              :loading="loadingAccept"
               @click="acceptRequest"
               >ACCCEPT</v-btn
             >
@@ -45,6 +46,9 @@
               @click="rejectRequest"
               >REJECT</v-btn
             >
+          </v-col>
+          <v-col align-self="center" cols="12" class="text-center">
+            <p>You have {{ countDown }}sec left to accept this snip</p>
           </v-col>
         </v-row>
       </v-card-text>
@@ -93,6 +97,9 @@ export default {
   data() {
     return {
       socket: null,
+      countDown: 30,
+      intervalId: null,
+      loadingAccept: false,
     }
   },
   computed: {},
@@ -103,10 +110,18 @@ export default {
     })
     // eslint-disable-next-line no-console
     console.log(this.socketClientId)
+    this.intervalId = setInterval(() => {
+      this.countDown -= 1
+      if (this.countDown < 1) {
+        clearInterval(this.intervalId)
+        this.noRespondToRequest()
+      }
+    }, 1000)
   },
   methods: {
-    acceptRequest() {
-      this.socket.emit('new_job_alert_accepted', {
+    noRespondToRequest() {
+      clearInterval(this.intervalId)
+      this.socket.emit('no_respond_to_request', {
         to: this.clientData,
         from: this.$auth.user,
         snip: this.snipData,
@@ -114,7 +129,18 @@ export default {
       })
       this.closeDialog()
     },
+    acceptRequest() {
+      this.loadingAccept = true
+      clearInterval(this.intervalId)
+      this.socket.emit('new_job_alert_accepted', {
+        to: this.clientData,
+        from: this.$auth.user,
+        snip: this.snipData,
+        sid: this.socketClientId,
+      })
+    },
     rejectRequest() {
+      clearInterval(this.intervalId)
       this.socket.emit('new_job_alert_rejected', {
         to: this.clientData,
         from: this.$auth.user,
