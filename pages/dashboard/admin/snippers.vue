@@ -20,7 +20,6 @@
       @closeSnipperDialog="closeDialog"
       @refreshData="updateSnippersTable"
     />
-    {{ dt }}
   </div>
 </template>
 

@@ -117,7 +117,7 @@
               <div class="text-md-h6 font-weight-medium">Working Hours</div>
               <v-divider></v-divider>
               <div v-if="user_data.snipper.working_hours">
-                <p>{{ user_data.snipper.working_hours.join(', ') }}</p>
+                <p>{{ user_data.snipper.working_hours }}</p>
               </div>
               <div v-else>
                 <p>No Working Hours attached</p>
@@ -127,7 +127,6 @@
               Client
             </div>
             <div v-else>Admin</div>
-            {{ user_data }}
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>

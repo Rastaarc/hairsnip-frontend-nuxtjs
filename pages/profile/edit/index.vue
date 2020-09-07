@@ -77,7 +77,7 @@
                 <v-col>
                   <v-select
                     v-model="edit.skills"
-                    :items="skillsItems"
+                    :items="mskills"
                     auto-grow
                     outlined
                     multiple
@@ -108,7 +108,6 @@
                     :items="workingHoursItems"
                     auto-grow
                     outlined
-                    multiple
                     auto-complete
                     label="Working Hours"
                   >
@@ -175,6 +174,30 @@
 <script>
 export default {
   middleware: 'authenticate',
+  asyncData({
+    isDev,
+    route,
+    store,
+    env,
+    params,
+    query,
+    req,
+    res,
+    redirect,
+    error,
+    $axios,
+  }) {
+    return $axios
+      .get('user/load/snips_name/')
+      .then((res) => {
+        const snipsData = res.data.data
+        return { skills: snipsData }
+      })
+      .catch((e) => {
+        // eslint-disable-next-line no-console
+        console.log(e)
+      })
+  },
   data() {
     return {
       autocomplete: {},
@@ -202,16 +225,15 @@ export default {
           : '',
         address: this.$auth.user.address || '',
       },
-      skillsItems: ['Afro', 'Low Cut', 'Gallas'],
+      skillsItems: this.skills,
       workingDaysItems: ['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'],
       workingHoursItems: [
-        '8:00am',
-        '9:00am',
-        'Wed',
-        'Thur',
-        'Fri',
-        'Sat',
-        'Sun',
+        '8am - 12pm',
+        '8am - 3pm',
+        '8am - 5pm',
+        '8am - 7pm',
+        '8am - 9pm',
+        '8am - 11pm',
       ],
       formRules: {
         usertypeRules: [(v) => !!v || 'User Type is required'],
@@ -255,8 +277,8 @@ export default {
     }
   },
   computed: {
-    ex() {
-      return this.edit.skills
+    mskills() {
+      return this.skills
     },
   },
   mounted() {
@@ -331,22 +353,29 @@ export default {
         return
       }
       this.loading = true
-      const response = await this.$axios.post('user/update/profile/', {
-        data: this.edit,
-      })
-      this.loading = false
-      if (response.status === 200) {
-        this.$store.dispatch('snackalert/showSnackbar', {
-          msg: response.data.msg,
-          color: 'success',
+      try {
+        const response = await this.$axios.post('user/update/profile/', {
+          data: this.edit,
         })
-      } else {
+        if (response.status === 200) {
+          this.$store.dispatch('snackalert/showSnackbar', {
+            msg: response.data.msg,
+            color: 'success',
+          })
+        } else {
+          this.$store.dispatch('snackalert/showSnackbar', {
+            msg: response.data.msg,
+            color: 'red',
+          })
+        }
+        this.$auth.fetchUser()
+      } catch (error) {
         this.$store.dispatch('snackalert/showSnackbar', {
-          msg: response.data.msg,
+          msg: 'An error occurred while updating your profile',
           color: 'red',
         })
       }
-      this.$auth.fetchUser()
+      this.loading = false
     },
   },
   head() {

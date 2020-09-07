@@ -4,7 +4,7 @@
       <v-col cols="12" md="6" align-self="center">
         <v-card>
           <v-card-text>
-            <v-form ref="requestForm" @submit.prevent="showData">
+            <v-form ref="requestForm" @submit.prevent="showSnipper">
               <p class="text-h5 text-center">Choose Your Hair Style</p>
               <v-row>
                 <v-col cols="12">
@@ -55,38 +55,33 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row v-if="dataAvailable">
-      <v-col cols="12">
-        <p class="text-center text-h4 font-weight-bold primary--text">
-          Snippers in your Area <br />
-          <span class="text-h5 red--text text-lighten-2"
-            >with {{ skill }} skill
-          </span>
-        </p>
-      </v-col>
-      <v-col v-for="snipper in snippers" :key="snipper.id" cols="12">
-        <SnipperCard :user-data="snipper" />
-      </v-col>
-    </v-row>
+    <SnipperViewDialog
+      v-if="dataAvailable"
+      :open-dialog="showSnipperDialog"
+      :snipper-data="snipper"
+      @closeSnipperViewDialog="closeDialog"
+    />
   </div>
 </template>
 
 <script>
-import SnipperCard from '@/components/SnipperCard'
+import SnipperViewDialog from '@/components/SnipperViewDialog'
 export default {
   components: {
-    SnipperCard,
+    SnipperViewDialog,
   },
   middleware: 'auth-client',
   data() {
     return {
+      showSnipperDialog: false,
       autocomplete: null,
       clientData: {
         clientLocation: this.$auth.user.address || null,
         clientHairStyle: null,
+        dataIndex: 0,
       },
       loadingData: false,
-      snippers: [],
+      snipper: null,
       dataAvailable: false,
       rules: {
         style: [(v) => !!v || 'Please enter the hair style'],
@@ -150,7 +145,10 @@ export default {
     }
   },
   methods: {
-    async showData() {
+    closeDialog() {
+      this.showSnipperDialog = false
+    },
+    async showSnipper() {
       this.dataAvailable = false
       const valid = this.$refs.requestForm.validate()
       if (!valid) {
@@ -162,7 +160,7 @@ export default {
       }
       this.loadingData = true
       try {
-        const { data } = await this.$axios.post('user/load/snippers/', {
+        const { data } = await this.$axios.post('user/load/snipper/', {
           data: this.clientData,
         })
         // eslint-disable-next-line no-console
@@ -173,8 +171,9 @@ export default {
             color: 'red',
           })
         } else {
+          this.showSnipperDialog = true
           this.dataAvailable = true
-          this.snippers = data.snippers
+          this.snipper = data.snipper
         }
       } catch (error) {
         this.$store.dispatch('snackalert/showSnackbar', {

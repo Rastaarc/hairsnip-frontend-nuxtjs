@@ -20,7 +20,6 @@
       @closeClientDialog="closeDialog"
       @refreshData="updateClientsTable"
     />
-    {{ dt }}
   </div>
 </template>
 
