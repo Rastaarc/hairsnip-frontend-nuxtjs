@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2Cp-EadvDthMRaOcM2vszEMz9kiDa1MM&libraries=places" defer></script>
+    <title>Document</title>
+</head>
+<body>
+
+    <input type="text" id="address" class="address" />
+
+    <script>
+        window.onload = () => {
+
+            const addr = document.getElementById("address")
+            console.log(addr)
+
+            const options = {
+            //types: ['cities'],
+            // eslint-disable-next-line no-undef
+            bounds: new google.maps.LatLngBounds(
+              // eslint-disable-next-line no-undef
+              new google.maps.LatLng(9.081999, 8.675277)
+            ),
+            componentRestrictions: {
+                country: 'NG'
+            },
+          }
+          // eslint-disable-next-line no-undef
+          const autocomplete = new google.maps.places.Autocomplete(
+           addr,
+            // this.$refs.address,
+            options
+          )
+          autocomplete.setFields([
+              'formatted_address',
+              'name',
+              'geometry',
+          ])
+          autocomplete.addListener('place_changed', ()=>{
+              const place = autocomplete.getPlace();
+              console.log(place)
+          })
+
+          console.log(autocomplete)
+        }
+    </script>
+    
+</body>
+</html>

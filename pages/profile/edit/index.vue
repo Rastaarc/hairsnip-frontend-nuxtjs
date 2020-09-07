@@ -166,7 +166,6 @@
               </v-col>
             </v-row>
           </v-form>
-          API Key ==> {{ $config.GMAP_API_KEY }}
         </v-card-text>
       </v-card>
     </v-col>
@@ -264,7 +263,15 @@ export default {
     this.$nextTick(() => {
       try {
         const options = {
-          types: ['cities'],
+          // types: ['cities'],
+          // eslint-disable-next-line no-undef
+          bounds: new google.maps.LatLngBounds(
+            // eslint-disable-next-line no-undef
+            new google.maps.LatLng(9.081999, 8.675277)
+          ),
+          componentRestrictions: {
+            country: 'NG',
+          },
         }
         // eslint-disable-next-line no-undef
         const googleAPI = new google.maps.places.Autocomplete(
@@ -277,6 +284,12 @@ export default {
         }
         // eslint-disable-next-line no-console
         console.log(this.autocomplete)
+        this.autocomplete.setFields(['formatted_address', 'name', 'geometry'])
+        this.autocomplete.addListener('place_changed', () => {
+          const place = this.autocomplete.getPlace()
+          // eslint-disable-next-line no-console
+          console.log(place)
+        })
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error)
@@ -338,8 +351,8 @@ export default {
       title: 'Edit Profile',
       script: [
         {
-          src: `https://maps.googleapis.com/maps/api/js?key=AIzaSyB2Cp-EadvDthMRaOcM2vszEMz9kiDa1MM&libraries=places`,
-          defer: true,
+          // src: `https://maps.googleapis.com/maps/api/js?key=AIzaSyB2Cp-EadvDthMRaOcM2vszEMz9kiDa1MM&libraries=places`,
+          // defer: true,
           // src: `https://maps.googleapis.com/maps/api/js?key=${this.$config.GMAP_API_KEY}&libraries=places`,
         },
       ],

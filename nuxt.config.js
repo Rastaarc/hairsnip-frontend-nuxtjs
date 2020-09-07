@@ -1,12 +1,12 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
-  publicRuntimeConfig: {},
-  privateRuntimeConfig: {
+  publicRuntimeConfig: {
     GMAP_API_KEY:
       process.env.GMAP_API_KEY ||
       'AIzaSyAbop4UCMioFxvy3C1sPreT8BpCQvZfsb0AIzaSyB2Cp-EadvDthMRaOcM2vszEMz9kiDa1MM',
   },
+  privateRuntimeConfig: {},
   /*
    ** Nuxt rendering mode
    ** See https://nuxtjs.org/api/configuration-mode
@@ -34,6 +34,13 @@ export default {
       },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    script: [
+      {
+        src:
+          'https://maps.googleapis.com/maps/api/js?key=AIzaSyB2Cp-EadvDthMRaOcM2vszEMz9kiDa1MM&libraries=places',
+        defer: true,
+      },
+    ],
   },
   /*
    ** Global CSS
