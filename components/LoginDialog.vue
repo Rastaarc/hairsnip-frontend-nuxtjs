@@ -3,7 +3,9 @@
     <v-card>
       <v-card-title></v-card-title>
       <v-card-text>
-        <h4 class="text-h4 mt-4 text-center primary--text">Login</h4>
+        <h4 class="text-h4 mt-4 text-center primary--text mt-n1 mb-n4">
+          Login
+        </h4>
         <v-row justify="center" align="center" class="mt-0">
           <v-col color="primary" cols="4" class="mx-auto">
             <v-divider></v-divider>
@@ -11,7 +13,7 @@
         </v-row>
         <v-form ref="form" @submit.prevent="submit">
           <v-row>
-            <v-col cols="12" md="8" lg="6" class="mx-auto">
+            <v-col cols="12" md="9" lg="7" class="mx-auto mt-n4">
               <v-text-field
                 v-model="username"
                 :rules="usernameRules"
@@ -24,7 +26,7 @@
             </v-col>
           </v-row>
           <v-row class="pb-0 mb-1">
-            <v-col cols="12" md="8" lg="6" class="mx-auto">
+            <v-col cols="12" md="9" lg="7" class="mx-auto mt-n7">
               <v-text-field
                 v-model="password"
                 :rules="passwordRules"
@@ -38,8 +40,8 @@
               </v-text-field>
             </v-col>
           </v-row>
-          <v-row align="center" justify="center" class="mb-4 text-center">
-            <v-col cols="12">
+          <v-row align="center" justify="center" class="text-center">
+            <v-col cols="12" class="mt-n6">
               <v-btn
                 :loading="loading"
                 outlined
@@ -51,8 +53,8 @@
               </v-btn>
             </v-col>
           </v-row>
-          <v-row align="center" justify="center" class="mt-5 text-center">
-            <v-col cols="12">
+          <v-row align="center" justify="center" class="text-center">
+            <v-col cols="12 mt-n4 mb-n6">
               Don't have an account?
               <v-btn
                 class="pl-0"

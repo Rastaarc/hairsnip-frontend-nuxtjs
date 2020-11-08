@@ -8,12 +8,12 @@
               New Job Alert
             </h3>
           </v-col>
-          <v-col align-self="center" cols="12" class="text-center">
+          <v-col align-self="center" cols="12" class="text-center mt-n3">
             <v-avatar size="150">
               <v-img :src="clientData.image_url" />
             </v-avatar>
           </v-col>
-          <v-col align-self="center" cols="12" class="text-center">
+          <v-col align-self="center" cols="12" class="text-center mt-n5">
             <div class="text-center">
               <p class="primary--text text-h5">{{ clientData.username }}</p>
               <p class="text-caption-2 text-center" style="margin-top: -15px;">
@@ -22,11 +22,11 @@
               </p>
             </div>
           </v-col>
-          <v-col align-self="center" cols="12" class="text-center">
+          <v-col align-self="center" cols="12" class="text-center mt-n6">
             <p>Snip: {{ snipData.name }}</p>
             <p>Charges: {{ snipData.price }}</p>
           </v-col>
-          <v-col align-self="center" cols="12" class="text-center">
+          <v-col align-self="center" cols="12" class="text-center mt-n7">
             <v-btn
               color="green"
               text
@@ -47,7 +47,7 @@
               >REJECT</v-btn
             >
           </v-col>
-          <v-col align-self="center" cols="12" class="text-center">
+          <v-col align-self="center" cols="12" class="text-center mt-n6 mb-n7">
             <p>You have {{ countDown }}sec left to accept this snip</p>
           </v-col>
         </v-row>

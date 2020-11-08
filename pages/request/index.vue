@@ -174,7 +174,10 @@ export default {
 
         this.showSnipperDialog = false
         this.dataAvailable = false
-        this.$router.push('/dashboard/client/orders')
+        this.$router.push({
+          name: 'dashboard-client-orders-orders',
+          params: { data: msg },
+        })
       }
     })
     this.socket.on('snipper_reject_job_offer', (msg, cb) => {

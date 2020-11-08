@@ -12,7 +12,7 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col>
+          <v-col class="mt-n3">
             <v-tabs v-model="signupTab" grow>
               <v-tabs-slider color="primary"></v-tabs-slider>
               <v-tab href="#clientTab">CLIENT</v-tab>
@@ -22,7 +22,7 @@
               <v-tab-item value="clientTab">
                 <v-form ref="form" @submit.prevent="submit">
                   <v-row>
-                    <v-col cols="12" md="8" lg="6" class="mx-auto">
+                    <v-col cols="12" md="9" lg="7" class="mx-auto mt-n3">
                       <v-text-field
                         v-model="signup.username"
                         :rules="rules.usernameRules"
@@ -36,7 +36,7 @@
                     </v-col>
                   </v-row>
                   <v-row>
-                    <v-col cols="12" md="8" lg="6" class="mx-auto">
+                    <v-col cols="12" md="9" lg="7" class="mx-auto mt-n6">
                       <v-text-field
                         v-model="signup.email"
                         label="Email"
@@ -50,7 +50,7 @@
                     </v-col>
                   </v-row>
                   <v-row>
-                    <v-col cols="12" md="8" lg="6" class="mx-auto">
+                    <v-col cols="12" md="9" lg="7" class="mx-auto mt-n6">
                       <v-text-field
                         v-model="signup.phone"
                         label="Phone Number"
@@ -65,7 +65,7 @@
                     </v-col>
                   </v-row>
                   <v-row class="pb-0 mb-1">
-                    <v-col cols="12" md="8" lg="6" class="mx-auto">
+                    <v-col cols="12" md="9" lg="7" class="mx-auto mt-n6">
                       <v-text-field
                         v-model="signup.password"
                         label="Password"
@@ -85,7 +85,7 @@
                     justify="center"
                     class="mb-4 text-center"
                   >
-                    <v-col cols="12">
+                    <v-col cols="12" class="mt-n4">
                       <v-btn
                         :loading="loading"
                         outlined
@@ -102,7 +102,7 @@
               <v-tab-item value="snipperTab">
                 <v-form ref="form" @submit.prevent="submit">
                   <v-row>
-                    <v-col cols="12" md="8" lg="6" class="mx-auto">
+                    <v-col cols="12" md="9" lg="7" class="mx-auto mt-n3">
                       <v-text-field
                         v-model="signup.fullName"
                         label="Full Name"
@@ -116,7 +116,7 @@
                     </v-col>
                   </v-row>
                   <v-row>
-                    <v-col cols="12" md="8" lg="6" class="mx-auto">
+                    <v-col cols="12" md="9" lg="7" class="mx-auto mt-n5">
                       <v-text-field
                         v-model="signup.username"
                         :rules="rules.usernameRules"
@@ -130,7 +130,7 @@
                     </v-col>
                   </v-row>
                   <v-row>
-                    <v-col cols="12" md="8" lg="6" class="mx-auto">
+                    <v-col cols="12" md="9" lg="7" class="mx-auto mt-n5">
                       <v-text-field
                         v-model="signup.email"
                         label="Email"
@@ -144,7 +144,7 @@
                     </v-col>
                   </v-row>
                   <v-row>
-                    <v-col cols="12" md="8" lg="6" class="mx-auto">
+                    <v-col cols="12" md="9" lg="7" class="mx-auto mt-n5">
                       <v-text-field
                         v-model="signup.phone"
                         label="Phone Number"
@@ -159,7 +159,7 @@
                     </v-col>
                   </v-row>
                   <v-row class="pb-0 mb-1">
-                    <v-col cols="12" md="8" lg="6" class="mx-auto">
+                    <v-col cols="12" md="9" lg="7" class="mx-auto mt-n5">
                       <v-text-field
                         v-model="signup.password"
                         label="Password"
@@ -179,7 +179,7 @@
                     justify="center"
                     class="mb-4 text-center"
                   >
-                    <v-col cols="12">
+                    <v-col cols="12" class="mt-n6">
                       <v-btn
                         :loading="loading"
                         outlined
@@ -196,7 +196,7 @@
             </v-tabs-items>
           </v-col>
         </v-row>
-        <v-row align="center" justify="center" class="mt-5 text-center">
+        <v-row align="center" justify="center" class="mt-n9 mb-n5 text-center">
           <v-col cols="12">
             Have an account?
             <v-btn

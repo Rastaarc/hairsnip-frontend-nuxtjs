@@ -54,74 +54,79 @@
             </v-col>
           </v-row>
           <v-row v-else-if="cardPaymentMode">
-            <v-col align-self="center" cols="12">
+            <v-col align-self="center" cols="12" class="mt-n3">
               <h5 class="mt-5 text-center text-h6 primary--text">
                 CARD PAYMENT MODE
               </h5>
             </v-col>
-            <v-col align-self="center" cols="12">
-              <v-img
-                src="/credit_card.png"
-                width="260"
-                height="153"
-                class="mx-auto'"
-              />
+            <v-col align-self="center" cols="8" offset="2" class="mt-n4">
+              <p class="mx-auto text-center">
+                <v-img
+                  contain
+                  src="/credit_card.png"
+                  width="260"
+                  height="153"
+                  class="mx-auto'"
+                />
+              </p>
             </v-col>
-            <v-row>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="card.number"
-                  :rules="cardRules.number"
-                  label="Credit card number"
-                  type="number"
-                  required
-                >
-                </v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="6">
-                <v-text-field
-                  v-model="card.monthYear"
-                  :rules="cardRules.monthYear"
-                  label="MM/YY"
-                  required
-                >
-                </v-text-field>
-              </v-col>
-              <v-col cols="6">
-                <v-text-field
-                  v-model="card.cvv"
-                  :rules="cardRules.cvv"
-                  label="CVV"
-                  required
-                >
-                </v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="card.nameOnCard"
-                  :rules="cardRules.nameOnCard"
-                  label="Name on card"
-                  required
-                >
-                </v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col align-self="center" cols="12" class="mt-3 text-center">
-                <v-btn
-                  color="primary"
-                  elevation="2"
-                  small
-                  :loading="cardPaymentLoading"
-                  @click="makeCardPayment"
-                  >CONTINUE</v-btn
-                >
-              </v-col>
-            </v-row>
+            <v-col cols="11" class="mx-auto mt-n6">
+              <v-row>
+                <v-col cols="12" class="mt-n8">
+                  <v-text-field
+                    v-model="card.number"
+                    :rules="cardRules.number"
+                    label="Credit card number"
+                    type="number"
+                    required
+                  >
+                  </v-text-field>
+                </v-col>
+              </v-row>
+              <v-row class="mt-n8">
+                <v-col cols="6">
+                  <v-text-field
+                    v-model="card.monthYear"
+                    :rules="cardRules.monthYear"
+                    label="MM/YY"
+                    required
+                  >
+                  </v-text-field>
+                </v-col>
+                <v-col cols="6">
+                  <v-text-field
+                    v-model="card.cvv"
+                    :rules="cardRules.cvv"
+                    label="CVV"
+                    required
+                  >
+                  </v-text-field>
+                </v-col>
+              </v-row>
+              <v-row class="mt-n8">
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="card.nameOnCard"
+                    :rules="cardRules.nameOnCard"
+                    label="Name on card"
+                    required
+                  >
+                  </v-text-field>
+                </v-col>
+              </v-row>
+              <v-row class="mt-n7 mb-n9">
+                <v-col align-self="center" cols="12" class="mt-3 text-center">
+                  <v-btn
+                    color="primary"
+                    elevation="2"
+                    small
+                    :loading="cardPaymentLoading"
+                    @click="makeCardPayment"
+                    >CONTINUE</v-btn
+                  >
+                </v-col>
+              </v-row>
+            </v-col>
           </v-row>
         </v-row>
       </v-card-text>
@@ -140,17 +145,13 @@ export default {
       type: Boolean,
       default: false,
     },
-    clientData: {
-      type: Object,
-      default: () => {},
-    },
-    snipData: {
+    paymentData: {
       type: Object,
       default: () => {},
     },
     width: {
       type: Number,
-      default: 300,
+      default: 380,
     },
     fullscreen: {
       type: Boolean,
@@ -188,6 +189,8 @@ export default {
       name: 'main',
       persist: 'true',
     })
+    // eslint-disable-next-line no-console
+    console.log(this.paymentData)
   },
   methods: {
     closeDialog() {

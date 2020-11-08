@@ -10,6 +10,7 @@
     </DataTableCard>
     <PaymentViewDialog
       :open-dialog="openPaymentDialog"
+      :payment-data="paymentData"
       @closePaymentModeViewDialog="closePaymentModeViewDialog"
     >
     </PaymentViewDialog>
@@ -59,6 +60,7 @@ export default {
         ],
         items: this.fillDatatable,
       },
+      paymentData: null,
     }
   },
   computed: {
@@ -80,7 +82,11 @@ export default {
   },
   mounted() {
     this.datatable.items = this.fillDatatable
-    this.openPaymentDialog = true
+
+    if (this.$route.params.data) {
+      this.paymentData = this.$route.params.data
+      this.openPaymentDialog = true
+    }
   },
   methods: {
     closePaymentModeViewDialog() {
