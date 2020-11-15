@@ -106,7 +106,7 @@ export default {
         // eslint-disable-next-line no-undef
         this.gMap = new google.maps.Map(mapHolder, {
           center: mapCenter,
-          zome: 17,
+          zoom: 17,
         })
 
         // eslint-disable-next-line no-undef
