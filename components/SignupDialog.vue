@@ -212,7 +212,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn text color="red acent-3" @click="closeDialog">Close</v-btn>
+        <v-btn text color="red acent-3" @click.stop="closeDialog">Close</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

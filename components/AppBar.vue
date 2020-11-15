@@ -54,7 +54,7 @@
             :color="mainColor"
             :small="smallBtn"
             :x-small="xSmallScreen"
-            @click="openSignupDialog"
+            @click.stop="openSignupDialog"
           >
             Signup
           </v-btn>
@@ -62,7 +62,7 @@
             outlined
             :color="mainColor"
             :small="smallBtn"
-            @click="openLoginDialog"
+            @click.stop="openLoginDialog"
           >
             Login
           </v-btn>

@@ -6,6 +6,7 @@
       :title="title"
       :loading="loadingData"
       @updateClient="updateClient($event)"
+      @showMap="showMap($event)"
     >
     </DataTableCard>
     <PaymentViewDialog
@@ -14,18 +15,25 @@
       @closePaymentModeViewDialog="closePaymentModeViewDialog"
     >
     </PaymentViewDialog>
+    <MapViewDialog
+      :open-dialog="openMapViewDialog"
+      :map-data="mapData"
+      @closeMapViewDialog="closeMapViewDialog"
+    />
   </div>
 </template>
 
 <script>
 import DataTableCard from '@/components/DataTableCard'
 import PaymentViewDialog from '@/components/PaymentViewDialog'
+import MapViewDialog from '@/components/MapViewDialog'
 
 export default {
   middleware: 'auth-client',
   components: {
     DataTableCard,
     PaymentViewDialog,
+    MapViewDialog,
   },
   async asyncData({
     isDev,
@@ -50,6 +58,7 @@ export default {
       title: 'My Orders',
       loadingData: false,
       openPaymentDialog: false,
+      openMapViewDialog: false,
       datatable: {
         headers: [
           { text: 'ID', value: 'id' },
@@ -61,6 +70,7 @@ export default {
         items: this.fillDatatable,
       },
       paymentData: null,
+      mapData: null,
     }
   },
   computed: {
@@ -89,6 +99,9 @@ export default {
     }
   },
   methods: {
+    closeMapViewDialog() {
+      this.openMapViewDialog = false
+    },
     closePaymentModeViewDialog() {
       this.openPaymentDialog = false
     },
@@ -112,6 +125,18 @@ export default {
       }
       this.loadingData = false
       this.datatable.items = dataHolder
+    },
+    showMap(data) {
+      // eslint-disable-next-line no-console
+      console.log("You're asking me to show map for orders")
+      // eslint-disable-next-line no-console
+      console.log(data)
+      // eslint-disable-next-line no-console
+      console.log(this.$auth.user.username)
+      if (this.$auth.user.username === data.owner) {
+        this.mapData = data
+        this.openMapViewDialog = true
+      }
     },
   },
   head() {

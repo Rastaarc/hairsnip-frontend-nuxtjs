@@ -65,7 +65,7 @@
           text
           color="red acent-3"
           :disable="disableCloseBtn"
-          @click="closeDialog"
+          @click.stop="closeDialog"
           >Close</v-btn
         >
       </v-card-actions>

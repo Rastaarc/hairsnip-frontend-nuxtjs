@@ -1,14 +1,14 @@
 <template>
   <div>
     <DataTableCard
-      callee="jobs"
+      callee="jobs-admin"
       :datatable="datatable"
       :title="title"
       :loading="loadingData"
     >
       <template v-slot:actionBtn>
         <div>
-          <v-btn text outlined color="primary" @click="showNewSnipDialog">
+          <v-btn text outlined color="primary" @click="showNewRequestDialog">
             <v-icon small left>mdi-plus</v-icon> Add New
           </v-btn>
         </div>
@@ -86,6 +86,10 @@ export default {
     this.datatable.items = this.fillDatatable
   },
   methods: {
+    showNewRequestDialog() {
+      // eslint-disable-next-line no-console
+      console.log('About to add new Request')
+    },
     async updateDataTable() {
       this.loadingData = true
       const { data } = await this.$axios.get('admin/get/jobs/')

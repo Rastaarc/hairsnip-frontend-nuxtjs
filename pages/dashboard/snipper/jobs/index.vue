@@ -6,18 +6,26 @@
       :title="title"
       :loading="loadingData"
       @updateSnipper="updateSnipper($event)"
+      @showMap="showMap($event)"
     >
     </DataTableCard>
+    <MapViewDialog
+      :open-dialog="openMapViewDialog"
+      :map-data="mapData"
+      @closeMapViewDialog="closeMapViewDialog"
+    />
   </div>
 </template>
 
 <script>
 import DataTableCard from '@/components/DataTableCard'
+import MapViewDialog from '@/components/MapViewDialog'
 
 export default {
   middleware: 'auth-snipper',
   components: {
     DataTableCard,
+    MapViewDialog,
   },
   async asyncData({
     isDev,
@@ -45,6 +53,7 @@ export default {
     return {
       title: 'My Jobs',
       loadingData: false,
+      openMapViewDialog: false,
       datatable: {
         headers: [
           { text: 'ID', value: 'id' },
@@ -54,6 +63,7 @@ export default {
           { text: 'Actions', value: 'actions' },
         ],
         items: this.fillDatatable,
+        mapData: null,
       },
     }
   },
@@ -78,6 +88,9 @@ export default {
     this.datatable.items = this.fillDatatable
   },
   methods: {
+    closeMapViewDialog() {
+      this.openMapViewDialog = false
+    },
     updateSnipper(item) {
       // eslint-disable-next-line no-console
       console.log(item)
@@ -98,6 +111,18 @@ export default {
       }
       this.loadingData = false
       this.datatable.items = dataHolder
+    },
+    showMap(data) {
+      // eslint-disable-next-line no-console
+      console.log("You're asking me to show map for jobs")
+      // eslint-disable-next-line no-console
+      console.log(data)
+      // eslint-disable-next-line no-console
+      console.log(this.$auth.user.username)
+      if (this.$auth.user.username === data.owner) {
+        this.mapData = data
+        this.openMapViewDialog = true
+      }
     },
   },
   head() {
