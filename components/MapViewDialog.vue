@@ -236,7 +236,7 @@ export default {
             // eslint-disable-next-line no-undef
             this.gMap = new google.maps.Map(mapHolder, {
               center: mapCenter,
-              zoom: 10,
+              zoom: 19,
             })
             // eslint-disable-next-line no-undef
             this.locMarker = new google.maps.Marker({
