@@ -61,7 +61,24 @@
                     >
                       client data
                     </p>
-                    <p>{{ clientData }}</p>
+                    <p class="primary--text">
+                      Username:
+                      <span class="font-weight-bold">
+                        {{ clientUsername }}
+                      </span>
+                    </p>
+                    <p class="primary--text">
+                      Phone:
+                      <span class="font-weight-bold">
+                        {{ clientPhone }}
+                      </span>
+                    </p>
+                    <p class="primary--text">
+                      Address:
+                      <span class="font-weight-bold">
+                        {{ clientAddress }}
+                      </span>
+                    </p>
                   </div>
                 </template>
               </v-col>
@@ -131,9 +148,23 @@ export default {
         return null
       }
     },
-    clientData() {
+    clientUsername() {
       try {
-        return this.mapData.data.others.client
+        return this.mapData.data.others.client.username
+      } catch (error) {
+        return null
+      }
+    },
+    clientPhone() {
+      try {
+        return this.mapData.data.others.client.phone
+      } catch (error) {
+        return null
+      }
+    },
+    clientAddress() {
+      try {
+        return this.mapData.data.others.client.address
       } catch (error) {
         return null
       }
@@ -199,7 +230,7 @@ export default {
 
         // eslint-disable-next-line no-undef
         this.geoL = new google.maps.Geocoder()
-        this.geoL.gecoder({ address }, (res, status) => {
+        this.geoL.geocode({ address }, (res, status) => {
           if (status === 'OK') {
             mapCenter = res[0].geometry.location
             // eslint-disable-next-line no-undef
