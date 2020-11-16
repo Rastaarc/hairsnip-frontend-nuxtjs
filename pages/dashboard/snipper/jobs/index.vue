@@ -44,7 +44,7 @@ export default {
     // eslint-disable-next-line no-console
     // console.log(data)
     // eslint-disable-next-line no-console
-    // console.log(data.data)
+    console.log(data.data)
     return {
       dt: data.data,
     }
@@ -58,7 +58,7 @@ export default {
         headers: [
           { text: 'ID', value: 'id' },
           { text: 'Client', value: 'client' },
-          { text: 'Details', value: 'details' },
+          { text: 'Snip', value: 'snip' },
           { text: 'Created On', value: 'created_on' },
           { text: 'Actions', value: 'actions' },
         ],
@@ -74,9 +74,14 @@ export default {
         for (const d of this.dt) {
           dataHolder.push({
             id: d.id,
-            details: d.purpose,
+            snip: d.snip_data.name,
             client: d.client,
             created_on: d.created_on,
+            others: {
+              snip: d.snip_data,
+              client: d.client_data,
+              snipper: d.snipper_data,
+            },
           })
         }
       }

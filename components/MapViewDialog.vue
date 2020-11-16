@@ -9,17 +9,59 @@
           <v-col align-self="center" cols="12">
             <v-row>
               <v-col md="6" align-self="center">
-                Snips Details
+                <p
+                  class="text-center primary--text font-weight-bold text-uppercase"
+                >
+                  Snips Details
+                </p>
+                <p class="primary--text">
+                  Snip: <span class="font-weight-bold"> {{ snipName }} </span>
+                </p>
+                <p class="primary--text">
+                  Price: <span class="font-weight-bold"> {{ snipPrice }} </span>
+                </p>
+                <p class="primary--text">
+                  Description:
+                  <span class="font-weight-bold"> {{ snipDescription }} </span>
+                </p>
               </v-col>
               <v-col md="6" align-self="center">
                 <template v-if="ordersPage">
                   <div>
-                    snipper data
+                    <p
+                      class="text-center primary--text font-weight-bold text-uppercase"
+                    >
+                      snipper data
+                    </p>
+
+                    <p class="primary--text">
+                      Username:
+                      <span class="font-weight-bold">
+                        {{ snipperUsername }}
+                      </span>
+                    </p>
+                    <p class="primary--text">
+                      Phone:
+                      <span class="font-weight-bold">
+                        {{ snipperPhone }}
+                      </span>
+                    </p>
+                    <p class="primary--text">
+                      Address:
+                      <span class="font-weight-bold">
+                        {{ snipperAddress }}
+                      </span>
+                    </p>
                   </div>
                 </template>
                 <template v-else>
                   <div>
-                    client data
+                    <p
+                      class="text-center primary--text font-weight-bold text-uppercase"
+                    >
+                      client data
+                    </p>
+                    <p>{{ clientData }}</p>
                   </div>
                 </template>
               </v-col>
@@ -56,9 +98,67 @@ export default {
       gMap: null,
       clientGMarker: null,
       snipperGMarker: null,
+      locMarker: null,
+      geoL: null,
     }
   },
   computed: {
+    snipData() {
+      try {
+        return this.mapData.data.others.snip
+      } catch (error) {
+        return null
+      }
+    },
+    snipName() {
+      try {
+        return this.mapData.data.others.snip.name
+      } catch (error) {
+        return null
+      }
+    },
+    snipPrice() {
+      try {
+        return this.mapData.data.others.snip.price
+      } catch (error) {
+        return null
+      }
+    },
+    snipDescription() {
+      try {
+        return this.mapData.data.others.snip.description
+      } catch (error) {
+        return null
+      }
+    },
+    clientData() {
+      try {
+        return this.mapData.data.others.client
+      } catch (error) {
+        return null
+      }
+    },
+    snipperUsername() {
+      try {
+        return this.mapData.data.others.snipper.username
+      } catch (error) {
+        return null
+      }
+    },
+    snipperPhone() {
+      try {
+        return this.mapData.data.others.snipper.phone
+      } catch (error) {
+        return null
+      }
+    },
+    snipperAddress() {
+      try {
+        return this.mapData.data.others.snipper.address
+      } catch (error) {
+        return null
+      }
+    },
     ordersPage() {
       try {
         if (this.mapData.callee === 'orders') {
@@ -81,46 +181,59 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      if (this.userOpenDialog) {
-        // eslint-disable-next-line no-console
-        console.log('dialog is opened')
-      } else {
-        // eslint-disable-next-line no-console
-        console.log('dialog not yet opened')
-      }
       try {
         const mapHolder = document.getElementById('mapHolder')
-        const mapHolder2 = this.$refs.map
+        // const mapHolder2 = this.$refs.map
         // eslint-disable-next-line no-console
-        console.log(mapHolder)
+        // console.log(mapHolder)
         // eslint-disable-next-line no-console
-        console.log(mapHolder2)
+        // console.log(mapHolder2)
         let mapCenter = null
-        const snipperLoc = { lat: -34.397, lng: 150.644 }
-        const clientLoc = { lat: -50.397, lng: 150.644 }
+        let address = null
+
         if (this.ordersPage) {
-          mapCenter = snipperLoc // snipper location
+          address = this.snipperAddress // snipper location
         } else {
-          mapCenter = clientLoc // client location
+          address = this.$auth.user.address // client location
         }
-        // eslint-disable-next-line no-undef
-        this.gMap = new google.maps.Map(mapHolder, {
-          center: mapCenter,
-          zoom: 17,
-        })
 
         // eslint-disable-next-line no-undef
-        this.clientGMarker = new google.maps.Marker({
-          position: clientLoc,
-          map: this.gMap,
+        this.geoL = new google.maps.Geocoder()
+        this.geoL.gecoder({ address }, (res, status) => {
+          if (status === 'OK') {
+            mapCenter = res[0].geometry.location
+            // eslint-disable-next-line no-undef
+            this.gMap = new google.maps.Map(mapHolder, {
+              center: mapCenter,
+              zoom: 10,
+            })
+            // eslint-disable-next-line no-undef
+            this.locMarker = new google.maps.Marker({
+              position: mapCenter,
+              map: this.gMap,
+            })
+          } else {
+            this.$store.dispatch('snackalert/showSnackbar', {
+              msg:
+                'Failed to load Google Geocoding API correctly. Please try again',
+              color: 'red',
+            })
+          }
         })
-        // eslint-disable-next-line no-undef
-        this.snipperGMarker = new google.maps.Marker({
-          position: snipperLoc,
-          map: this.gMap,
-        })
-        // eslint-disable-next-line no-console
-        console.log(this.snipperGMarker)
+
+        // if (this.ordersPage) {
+        //   // eslint-disable-next-line no-undef
+        //   this.snipperGMarker = new google.maps.Marker({
+        //     position: mapCenter,
+        //     map: this.gMap,
+        //   })
+        // } else {
+        //   // eslint-disable-next-line no-undef
+        //   this.clientGMarker = new google.maps.Marker({
+        //     position: mapCenter,
+        //     map: this.gMap,
+        //   })
+        // }
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error)
