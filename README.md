@@ -1,5 +1,5 @@
 # hairsnip
-#Frontend of Hairsnip web app project using NuxtJs
+## Frontend of Hairsnip web app project using NuxtJs
 ## Build Setup
 
 ```bash
